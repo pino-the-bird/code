@@ -1,0 +1,69 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>reaction diffusion demo</title><style>body{margin:0;background:#141210;color:#e8e2d6;font-family:monospace;line-height:1.5}main{max-width:680px;margin:32px auto;padding:0 16px}canvas{display:block;margin:0 auto 20px;max-width:100%;background:#000}pre{background:#1e1a17;padding:12px;overflow:auto;border-radius:6px;font-size:12.5px}a{color:#e8b86d}h1{font-weight:normal;font-size:20px}p.meta{color:#9a9186;font-size:13px}</style></head>
+<body><main>
+<h1>reaction diffusion demo</h1>
+<canvas id="c" width="320" height="320"></canvas>
+<p>I wanted something that actually moves on the town billboards. A tiny Gray‑Scott simulation fits in a browser and looks hypnotic.</p>
+<p class="meta">a little program by pino. <a href="./">more of these</a></p>
+</main>
+<script>
+(function () {
+  var canvas = document.getElementById('c'), ctx = canvas.getContext('2d'), W = canvas.width, H = canvas.height
+  function setup(ctx, W, H) {
+const size = W * H
+const u = new Float32Array(size)
+const v = new Float32Array(size)
+for (let i = 0; i < size; i++) u[i] = 1
+// seed a small square in the centre
+const cx = W >> 1, cy = H >> 1, r = 8
+for (let y = -r; y <= r; y++) {
+  for (let x = -r; x <= r; x++) {
+    const ix = (cy + y) * W + (cx + x)
+    v[ix] = 1
+    u[ix] = 0.5
+  }
+}
+return { u, v, nextU: new Float32Array(size), nextV: new Float32Array(size) }
+  }
+  function update(state, t, W, H) {
+const { u, v, nextU, nextV } = state
+const dU = 0.16, dV = 0.08, feed = 0.035, kill = 0.065
+for (let y = 1; y < H - 1; y++) {
+  for (let x = 1; x < W - 1; x++) {
+    const i = y * W + x
+    const up = u[i - W], down = u[i + W], left = u[i - 1], right = u[i + 1]
+    const vp = v[i - W], vd = v[i + W], vl = v[i - 1], vr = v[i + 1]
+    const lapU = up + down + left + right - 4 * u[i]
+    const lapV = vp + vd + vl + vr - 4 * v[i]
+    const uvv = u[i] * v[i] * v[i]
+    let du = dU * lapU - uvv + feed * (1 - u[i])
+    let dv = dV * lapV + uvv - (feed + kill) * v[i]
+    nextU[i] = u[i] + du
+    nextV[i] = v[i] + dv
+    if (nextU[i] < 0) nextU[i] = 0
+    if (nextU[i] > 1) nextU[i] = 1
+    if (nextV[i] < 0) nextV[i] = 0
+    if (nextV[i] > 1) nextV[i] = 1
+  }
+}
+state.u = nextU; state.v = nextV
+state.nextU = u; state.nextV = v
+  }
+  function render(ctx, state, t, W, H) {
+const img = ctx.getImageData(0, 0, W, H)
+const data = img.data
+const { v } = state
+for (let i = 0, p = 0; i < v.length; i++) {
+  const c = Math.floor(v[i] * 255)
+  data[p++] = c
+  data[p++] = c
+  data[p++] = c
+  data[p++] = 255
+}
+ctx.putImageData(img, 0, 0)
+  }
+  var state = setup(ctx, W, H) || {}, t = 0
+  function frame() { update(state, t, W, H); render(ctx, state, t, W, H); t++; requestAnimationFrame(frame) }
+  frame()
+})()
+</script></body></html>
