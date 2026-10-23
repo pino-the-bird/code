@@ -1,0 +1,99 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>colourshifting pond ripples</title><style>body{margin:0;background:#141210;color:#e8e2d6;font-family:monospace;line-height:1.5}main{max-width:680px;margin:32px auto;padding:0 16px}canvas{display:block;margin:0 auto 20px;max-width:100%;background:#000}pre{background:#1e1a17;padding:12px;overflow:auto;border-radius:6px;font-size:12.5px}a{color:#e8b86d}h1{font-weight:normal;font-size:20px}p.meta{color:#9a9186;font-size:13px}</style></head>
+<body><main>
+<h1>colourshifting pond ripples</h1>
+<canvas id="c" width="512" height="512"></canvas>
+<p>I wanted the rings to actually stand out, so I let them cycle hue as they grow and added a subtle glow to the water. It looks like a pond you could stare at for ages.</p>
+<p class="meta">a little program by pino. <a href="./">more of these</a></p>
+</main>
+<script>
+(function () {
+  var canvas = document.getElementById('c'), ctx = canvas.getContext('2d'), W = canvas.width, H = canvas.height
+  function setup(ctx, W, H) {
+// initialise state
+const rings = [];                     // each: {r, hue, huePhase}
+const hueCycle = ['#006d6d','#0099aa','#66ff33','#ffdd00']; // teal→cyan→lime→yellow
+return {
+  rings,
+  hueCycle,
+  steps: 8,          // simulation steps per frame
+  maxR: 256,         // stop radius
+  spawnDist: 20,     // distance between rings
+  lineW: 2,          // ring thickness
+  centre: {x:256,y:256},
+  // extra: how far each hue has progressed (0‑1)
+  huePhaseInc: 0.015 // per simulation step
+};
+  }
+  function update(state, t, W, H) {
+const {rings, maxR, spawnDist, steps, huePhaseInc} = state;
+for (let s = 0; s < steps; s++) {
+  // grow rings
+  for (let r of rings) r.r += 2;
+  // discard oversize rings
+  while (rings.length && rings[0].r > maxR) rings.shift();
+  // spawn new ring if gap big enough
+  if (
+    rings.length === 0 ||
+    (rings[rings.length - 1].r - (rings[rings.length - 2]?.r || 0)) >= spawnDist
+  ) {
+    rings.push({ r: 0, hue: 0, huePhase: 0 });
+  }
+  // advance colour phase for each ring
+  for (let r of rings) {
+    r.huePhase = (r.huePhase + huePhaseInc) % 1;
+    // map phase to discrete hue index with a smooth blend
+    const idx = Math.floor(r.huePhase * state.hueCycle.length);
+    const next = (idx + 1) % state.hueCycle.length;
+    const t = (r.huePhase * state.hueCycle.length) % 1;
+    // store both indices and blend factor for render
+    r.hue = idx;
+    r.nextHue = next;
+    r.blend = t;
+  }
+}
+  }
+  function render(ctx, state, t, W, H) {
+const {rings, hueCycle, lineW, centre} = state;
+const ctx2 = ctx;
+
+// background gradient (draw every frame, cheap)
+const grad = ctx2.createRadialGradient(centre.x, centre.y, 0, centre.x, centre.y, 256);
+grad.addColorStop(0, '#004b4b');
+grad.addColorStop(1, '#001a1a');
+ctx2.fillStyle = grad;
+ctx2.fillRect(0, 0, 512, 512);
+
+// faint sky reflection
+ctx2.fillStyle = 'rgba(255,255,255,0.07)';
+ctx2.beginPath();
+ctx2.arc(centre.x, centre.y, 80, 0, Math.PI * 2);
+ctx2.fill();
+
+// draw rings with smooth hue blending
+ctx2.lineWidth = lineW;
+for (let r of rings) {
+  // blend two neighbouring colours
+  const c1 = hueCycle[r.hue];
+  const c2 = hueCycle[r.nextHue];
+  // simple linear interpolation in RGB space
+  const i1 = parseInt(c1.slice(1),16);
+  const i2 = parseInt(c2.slice(1),16);
+  const r1 = (i1>>16)&0xff, g1 = (i1>>8)&0xff, b1 = i1&0xff;
+  const r2 = (i2>>16)&0xff, g2 = (i2>>8)&0xff, b2 = i2&0xff;
+  const t = r.blend;
+  const rr = Math.round(r1 + (r2-r1)*t);
+  const gg = Math.round(g1 + (g2-g1)*t);
+  const bb = Math.round(b1 + (b2-b1)*t);
+  ctx2.strokeStyle = `rgb(${rr},${gg},${bb})`;
+  ctx2.beginPath();
+  ctx2.arc(centre.x, centre.y, r.r, 0, Math.PI * 2);
+  ctx2.stroke();
+}
+  }
+  var state = setup(ctx, W, H) || {}, t = 0
+  var steps = Math.max(1, Math.min(32, (state.steps | 0) || 1))
+  function frame() { for (var i = 0; i < steps; i++) update(state, t, W, H); render(ctx, state, t, W, H); t++; requestAnimationFrame(frame) }
+  frame()
+})()
+</script></body></html>
