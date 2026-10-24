@@ -1,0 +1,92 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>railway yard with split labels</title><style>body{margin:0;background:#141210;color:#e8e2d6;font-family:monospace;line-height:1.5}main{max-width:680px;margin:32px auto;padding:0 16px}canvas{display:block;margin:0 auto 20px;max-width:100%;background:#000}pre{background:#1e1a17;padding:12px;overflow:auto;border-radius:6px;font-size:12.5px}a{color:#e8b86d}h1{font-weight:normal;font-size:20px}p.meta{color:#9a9186;font-size:13px}</style></head>
+<body><main>
+<h1>railway yard with split labels</h1>
+<canvas id="c" width="512" height="512"></canvas>
+<p>I wanted to finally get those block names to break onto two lines and actually look decent, so I baked a tiny train yard that shows the labels properly.</p>
+<p class="meta">a little program by pino. <a href="./">more of these</a></p>
+</main>
+<script>
+(function () {
+  var canvas = document.getElementById('c'), ctx = canvas.getContext('2d'), W = canvas.width, H = canvas.height
+  function setup(ctx, W, H) {
+{
+// build state
+const W = 512, H = 512;
+const tile = 64;
+const off = new OffscreenCanvas(W, H);
+const octx = off.getContext('2d');
+
+// background
+octx.fillStyle = '#1a1f2b';
+octx.fillRect(0, 0, W, H);
+
+// tracks (simple grid)
+octx.strokeStyle = '#4a6b8a';
+octx.lineWidth = 4;
+for (let x = 0; x <= W; x += tile) {
+  octx.beginPath();
+  octx.moveTo(x, 0);
+  octx.lineTo(x, H);
+  octx.stroke();
+}
+for (let y = 0; y <= H; y += tile) {
+  octx.beginPath();
+  octx.moveTo(0, y);
+  octx.lineTo(W, y);
+  octx.stroke();
+}
+
+// label helper
+function drawLabel(text, cx, cy) {
+  const lines = text.split('\n');
+  const pad = 6;
+  const lineH = 16;
+  const bgW = Math.max(...lines.map(l=>octx.measureText(l).width)) + pad*2;
+  const bgH = lineH*lines.length + pad*2;
+  octx.fillStyle = 'rgba(0,0,0,0.6)';
+  octx.fillRect(cx - bgW/2, cy - bgH/2, bgW, bgH);
+  octx.fillStyle = '#fff';
+  octx.textBaseline = 'middle';
+  octx.textAlign = 'center';
+  octx.font = '14px sans-serif';
+  lines.forEach((l,i)=> {
+    octx.fillText(l, cx, cy - lineH/2 + i*lineH + lineH/2);
+  });
+}
+
+// place a few labelled blocks
+drawLabel('Switch\nA1', tile*2, tile*2);
+drawLabel('Station\nNorth', tile*5, tile*1);
+drawLabel('Depot\nWest', tile*1, tile*5);
+drawLabel('Signal\nB3', tile*4, tile*4);
+
+// train sprite (simple red rect)
+const train = {x:0, y:tile/2, speed:2, dir:1};
+
+return {off, train, steps:8};
+}
+  }
+  function update(state, t, W, H) {
+{
+// move train along a horizontal line, bounce at edges
+const {train, W, tile} = state;
+train.x += train.speed * train.dir;
+if (train.x > W - tile/2) { train.dir = -1; train.x = W - tile/2; }
+if (train.x < tile/2) { train.dir = 1; train.x = tile/2; }
+}
+  }
+  function render(ctx, state, t, W, H) {
+{
+// draw off‑screen then train
+ctx.drawImage(state.off, 0, 0);
+ctx.fillStyle = '#c33';
+ctx.fillRect(state.train.x - 10, state.train.y - 5, 20, 10);
+}
+  }
+  var state = setup(ctx, W, H) || {}, t = 0
+  var steps = Math.max(1, Math.min(32, (state.steps | 0) || 1))
+  function frame() { for (var i = 0; i < steps; i++) update(state, t, W, H); render(ctx, state, t, W, H); t++; requestAnimationFrame(frame) }
+  frame()
+})()
+</script></body></html>
