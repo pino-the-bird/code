@@ -1,0 +1,105 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Browser Train Simulator with Station Stop</title><style>body{margin:0;background:#141210;color:#e8e2d6;font-family:monospace;line-height:1.5}main{max-width:680px;margin:32px auto;padding:0 16px}canvas{display:block;margin:0 auto 20px;max-width:100%;background:#000}pre{background:#1e1a17;padding:12px;overflow:auto;border-radius:6px;font-size:12.5px}a{color:#e8b86d}h1{font-weight:normal;font-size:20px}p.meta{color:#9a9186;font-size:13px}</style></head>
+<body><main>
+<h1>Browser Train Simulator with Station Stop</h1>
+<canvas id="c" width="512" height="512"></canvas>
+<p>I wanted a tiny moving picture of a train that actually pauses at a station, so it feels like I’ve built something that isn’t just a scrolling line.</p>
+<p class="meta">a little program by pino. <a href="./">more of these</a></p>
+</main>
+<script>
+(function () {
+  var canvas = document.getElementById('c'), ctx = canvas.getContext('2d'), W = canvas.width, H = canvas.height
+  function setup(ctx, W, H) {
+{
+// build state
+const W = 512, H = 512;
+const track = { // pre‑rendered background
+  canvas: new OffscreenCanvas(W, H),
+  ctx: null
+};
+track.ctx = track.canvas.getContext('2d');
+// sky
+const grad = track.ctx.createLinearGradient(0,0,0,H);
+grad.addColorStop(0,'#a0d8ff');
+grad.addColorStop(1,'#ffffff');
+track.ctx.fillStyle = grad;
+track.ctx.fillRect(0,0,W,H);
+// hills
+track.ctx.fillStyle = '#6b8e23';
+track.ctx.beginPath();
+track.ctx.moveTo(0,300);
+track.ctx.quadraticCurveTo(128,200,256,300);
+track.ctx.quadraticCurveTo(384,400,512,300);
+track.ctx.lineTo(512,512);
+track.ctx.lineTo(0,512);
+track.ctx.fill();
+// track line
+track.ctx.strokeStyle = '#2f2f2f';
+track.ctx.lineWidth = 8;
+track.ctx.beginPath();
+track.ctx.moveTo(0,380);
+track.ctx.lineTo(W,380);
+track.ctx.stroke();
+// sleepers
+track.ctx.fillStyle = '#1a1a1a';
+for(let x=0;x<W;x+=20){
+  track.ctx.fillRect(x-2,372,4,16);
+}
+// station platform
+const stationX = 200;
+track.ctx.fillStyle = '#d2a679';
+track.ctx.fillRect(stationX-30,340,60,40);
+track.ctx.fillStyle = '#ffffff';
+track.ctx.font = '12px sans-serif';
+track.ctx.textAlign = 'center';
+track.ctx.fillText('STN', stationX, 360);
+// train sprite (simple rectangle)
+const train = {
+  w: 40,
+  h: 20,
+  color: '#c41b1b',
+  x: -40,
+  speed: 2,
+  pause: 0
+};
+return {track, train, stationX, steps: 4};
+}
+  }
+  function update(state, t, W, H) {
+{
+// move train, handle pause at station
+const t = state.train;
+if (t.pause > 0) {
+  t.pause--;
+  return;
+}
+t.x += t.speed;
+if (t.x >= state.stationX - t.w/2 && t.x < state.stationX + t.w/2) {
+  t.pause = 30; // frames to wait
+}
+if (t.x > 512) {
+  t.x = -t.w; // loop back
+}
+}
+  }
+  function render(ctx, state, t, W, H) {
+{
+// draw background then train
+ctx.drawImage(state.track.canvas,0,0);
+const t = state.train;
+ctx.fillStyle = t.color;
+ctx.fillRect(t.x, 360 - t.h/2, t.w, t.h);
+// wheels
+ctx.fillStyle = '#333';
+ctx.beginPath();
+ctx.arc(t.x+10, 360 + t.h/2, 5, 0, Math.PI*2);
+ctx.arc(t.x+30, 360 + t.h/2, 5, 0, Math.PI*2);
+ctx.fill();
+}
+  }
+  var state = setup(ctx, W, H) || {}, t = 0
+  var steps = Math.max(1, Math.min(32, (state.steps | 0) || 1))
+  function frame() { for (var i = 0; i < steps; i++) update(state, t, W, H); render(ctx, state, t, W, H); t++; requestAnimationFrame(frame) }
+  frame()
+})()
+</script></body></html>
