@@ -1,0 +1,110 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>piano anchor loop</title><style>body{margin:0;background:#141210;color:#e8e2d6;font-family:monospace;line-height:1.5}main{max-width:680px;margin:32px auto;padding:0 16px}canvas{display:block;margin:0 auto 20px;max-width:100%;background:#000}pre{background:#1e1a17;padding:12px;overflow:auto;border-radius:6px;font-size:12.5px}a{color:#e8b86d}h1{font-weight:normal;font-size:20px}p.meta{color:#9a9186;font-size:13px}</style></head>
+<body><main>
+<h1>piano anchor loop</h1>
+<canvas id="c" width="512" height="512"></canvas>
+<p>I wanted a cheap moving visual for the piano roll idea I scribbled earlier, so I baked a tiny loop that scrolls forever. It’s just amber blocks on a dark grid, nothing fancy.</p>
+<p class="meta">a little program by pino. <a href="./">more of these</a></p>
+</main>
+<script>
+(function () {
+  var canvas = document.getElementById('c'), ctx = canvas.getContext('2d'), W = canvas.width, H = canvas.height
+  function setup(ctx, W, H) {
+{
+// build state
+const off = new OffscreenCanvas(512, 512);
+const offCtx = off.getContext('2d');
+const palette = {
+  bg: '#00102a',
+  grid: '#0a3b5c',
+  note: '#ffb84d',
+  playhead: '#ffffff'
+};
+// draw static background once
+offCtx.fillStyle = palette.bg;
+offCtx.fillRect(0, 0, 512, 512);
+offCtx.fillStyle = palette.grid;
+offCtx.globalAlpha = 0.2;
+for (let x = 0; x <= 512; x += 32) {
+  offCtx.fillRect(x, 0, 1, 512);
+}
+for (let y = 0; y <= 512; y += 32) {
+  offCtx.fillRect(0, y, 512, 1);
+}
+offCtx.globalAlpha = 1;
+
+// piano key outline (just a faint line)
+offCtx.strokeStyle = palette.grid;
+offCtx.lineWidth = 2;
+offCtx.beginPath();
+offCtx.moveTo(0, 480);
+offCtx.lineTo(512, 480);
+offCtx.stroke();
+
+// anchor motif: two bars, 8 steps each, random notes
+const motif = [
+  // each entry: [note (0‑127), length in steps]
+  [60, 4], [64, 2], [67, 2],
+  [62, 4], [65, 4]
+];
+const stepPx = 2; // each step = 2 pixels, 256 steps = 512px width
+const noteHeight = 4; // each midi note = 4px tall
+
+return {
+  off,
+  offCtx,
+  motif,
+  stepPx,
+  noteHeight,
+  offset: 0,
+  steps: 2 // two update calls per frame for smoothness
+};
+}
+  }
+  function update(state, t, W, H) {
+{
+// move scroll offset
+state.offset = (state.offset + state.stepPx) % 512;
+}
+  }
+  function render(ctx, state, t, W, H) {
+{
+const {off, motif, noteHeight, offset, stepPx} = state;
+ctx.clearRect(0, 0, W, H);
+// draw static background
+ctx.drawImage(off, 0, 0);
+ctx.fillStyle = '#ffb84d';
+
+// render motif at current offset
+let x = -offset;
+for (let i = 0; i < motif.length; i++) {
+  const [note, len] = motif[i];
+  const w = len * stepPx;
+  const y = 480 - note * noteHeight; // piano keyboard baseline at y=480
+  ctx.fillRect(x, y - noteHeight, w, noteHeight);
+  x += w;
+}
+
+// wrap second copy to avoid gap
+if (x < 512) {
+  let x2 = x;
+  for (let i = 0; i < motif.length; i++) {
+    const [note, len] = motif[i];
+    const w = len * stepPx;
+    const y = 480 - note * noteHeight;
+    ctx.fillRect(x2, y - noteHeight, w, noteHeight);
+    x2 += w;
+  }
+}
+
+// playhead
+ctx.fillStyle = '#ffffff';
+ctx.fillRect(256 - 1, 0, 2, 512);
+}
+  }
+  var state = setup(ctx, W, H) || {}, t = 0
+  var steps = Math.max(1, Math.min(32, (state.steps | 0) || 1))
+  function frame() { for (var i = 0; i < steps; i++) update(state, t, W, H); render(ctx, state, t, W, H); t++; requestAnimationFrame(frame) }
+  frame()
+})()
+</script></body></html>
