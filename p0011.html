@@ -1,0 +1,83 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Train on a Slate Track</title><style>body{margin:0;background:#141210;color:#e8e2d6;font-family:monospace;line-height:1.5}main{max-width:680px;margin:32px auto;padding:0 16px}canvas{display:block;margin:0 auto 20px;max-width:100%;background:#000}pre{background:#1e1a17;padding:12px;overflow:auto;border-radius:6px;font-size:12.5px}a{color:#e8b86d}h1{font-weight:normal;font-size:20px}p.meta{color:#9a9186;font-size:13px}</style></head>
+<body><main>
+<h1>Train on a Slate Track</h1>
+<canvas id="c" width="512" height="512"></canvas>
+<p>I love watching a red engine zip across a dark sky, so I built a tiny canvas loop that actually moves instead of just blinking.</p>
+<p class="meta">a little program by pino. <a href="./">more of these</a></p>
+</main>
+<script>
+(function () {
+  var canvas = document.getElementById('c'), ctx = canvas.getContext('2d'), W = canvas.width, H = canvas.height
+  function setup(ctx, W, H) {
+{
+// create off‑screen canvas with static background
+const off = new OffscreenCanvas(W, H);
+const octx = off.getContext('2d');
+
+// draw background
+octx.fillStyle = '#1a1a2e';
+octx.fillRect(0, 0, W, H);
+
+// draw rails – a gentle curve
+octx.strokeStyle = '#777777';
+octx.lineWidth = 4;
+octx.beginPath();
+octx.moveTo(0, H * 0.7);
+octx.quadraticCurveTo(W * 0.5, H * 0.6, W, H * 0.7);
+octx.stroke();
+
+// locomotive sprite (simple rectangle for speed)
+const locoW = 40, locoH = 20;
+const sprite = document.createElement('canvas');
+sprite.width = locoW;
+sprite.height = locoH;
+const sctx = sprite.getContext('2d');
+sctx.fillStyle = '#d00';
+sctx.fillRect(0, 0, locoW, locoH);
+
+// state
+return {
+  off,
+  sprite,
+  x: -locoW,          // start off‑screen left
+  speed: 2,          // px per frame
+  steps: 8           // 8 simulation steps each draw call
+};
+}
+  }
+  function update(state, t, W, H) {
+{
+// advance position, loop around
+state.x += state.speed;
+if (state.x > W) state.x = -state.sprite.width;
+}
+  }
+  function render(ctx, state, t, W, H) {
+{
+// clear main canvas
+ctx.clearRect(0, 0, W, H);
+
+// draw pre‑rendered background
+ctx.drawImage(state.off, 0, 0);
+
+// motion blur: draw a few translucent copies behind the train
+const blurSteps = 4;
+for (let i = blurSteps; i > 0; i--) {
+  const bx = state.x - i * state.speed;
+  if (bx < -state.sprite.width) continue;
+  ctx.globalAlpha = 0.15 * (blurSteps - i + 1);
+  ctx.drawImage(state.sprite, bx, H * 0.65 - state.sprite.height / 2);
+}
+ctx.globalAlpha = 1;
+
+// draw the locomotive itself
+ctx.drawImage(state.sprite, state.x, H * 0.65 - state.sprite.height / 2);
+}
+  }
+  var state = setup(ctx, W, H) || {}, t = 0
+  var steps = Math.max(1, Math.min(32, (state.steps | 0) || 1))
+  function frame() { for (var i = 0; i < steps; i++) update(state, t, W, H); render(ctx, state, t, W, H); t++; requestAnimationFrame(frame) }
+  frame()
+})()
+</script></body></html>
