@@ -1,0 +1,128 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Pulsing Orb with Particle Trail</title><style>body{margin:0;background:#141210;color:#e8e2d6;font-family:monospace;line-height:1.5}main{max-width:680px;margin:32px auto;padding:0 16px}canvas{display:block;margin:0 auto 20px;max-width:100%;background:#000}pre{background:#1e1a17;padding:12px;overflow:auto;border-radius:6px;font-size:12.5px}a{color:#e8b86d}h1{font-weight:normal;font-size:20px}p.meta{color:#9a9186;font-size:13px}</style></head>
+<body><main>
+<h1>Pulsing Orb with Particle Trail</h1>
+<canvas id="c" width="512" height="512"></canvas>
+<p>I wanted something that actually looks alive, not just a static demo. The orb pulses and the mouse spawns a colourful spray, so it feels interactive and a bit flashy.</p>
+<p class="meta">a little program by pino. <a href="./">more of these</a></p>
+</main>
+<script>
+(function () {
+  var canvas = document.getElementById('c'), ctx = canvas.getContext('2d'), W = canvas.width, H = canvas.height
+  function setup(ctx, W, H) {
+{
+// initialise state
+const state = {
+  steps: 8, // sub‑steps per frame for smooth motion
+  orb: { x: W/2, y: H/2, r: 48, phase: 0 },
+  particles: [], // {x,y,vx,vy,life,clr}
+  // pre‑render static background to an off‑screen canvas
+  bg: (() => {
+    const off = new OffscreenCanvas(W, H);
+    const ctx = off.getContext('2d');
+    // dark gradient
+    const grad = ctx.createLinearGradient(0,0,W,H);
+    grad.addColorStop(0,'#00102a');
+    grad.addColorStop(1,'#001a33');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0,0,W,H);
+    // faint metal silhouettes (simple lines)
+    ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+    ctx.lineWidth = 2;
+    for(let i=0;i<30;i++){
+      ctx.beginPath();
+      ctx.moveTo(Math.random()*W, Math.random()*H);
+      ctx.lineTo(Math.random()*W, Math.random()*H);
+      ctx.stroke();
+    }
+    return off;
+  })()
+};
+return state;
+}
+  }
+  function update(state, t, W, H) {
+{
+// called state.steps times per frame
+for(let s=0; s<state.steps; s++){
+  // pulse orb
+  state.orb.phase += 0.02;
+  // spawn particles from mouse if present
+  if(state.mouse){
+    const {x,y}=state.mouse;
+    const angle = Math.random()*Math.PI*2;
+    const speed = 1.5+Math.random()*0.5;
+    state.particles.push({
+      x, y,
+      vx: Math.cos(angle)*speed,
+      vy: Math.sin(angle)*speed,
+      life: 30,
+      clr: Math.random()<0.5 ? 'cyan' : 'magenta'
+    });
+    state.mouse = null; // consume
+  }
+  // update particles
+  for(let i=state.particles.length-1;i>=0;i--){
+    const p = state.particles[i];
+    // rotate velocity field: v = rotate(-pos, 0.02)
+    const dx = p.x - state.orb.x;
+    const dy = p.y - state.orb.y;
+    const angle = -0.02;
+    const cos = Math.cos(angle), sin = Math.sin(angle);
+    const rvx = dx*cos - dy*sin;
+    const rvy = dx*sin + dy*cos;
+    p.vx += rvx*0.001;
+    p.vy += rvy*0.001;
+    p.x += p.vx;
+    p.y += p.vy;
+    p.life--;
+    if(p.life<=0) state.particles.splice(i,1);
+  }
+}
+}
+  }
+  function render(ctx, state, t, W, H) {
+{
+// draw background
+ctx.drawImage(state.bg,0,0);
+// draw orb with radial gradient
+const grad = ctx.createRadialGradient(
+  state.orb.x, state.orb.y, state.orb.r*0.2,
+  state.orb.x, state.orb.y, state.orb.r
+);
+const intensity = 0.8 + 0.2*Math.sin(state.orb.phase);
+grad.addColorStop(0, `rgba(255,200,50,${0.6*intensity})`);
+grad.addColorStop(1, `rgba(255,80,0,${0.2*intensity})`);
+ctx.fillStyle = grad;
+ctx.beginPath();
+ctx.arc(state.orb.x, state.orb.y, state.orb.r,0,Math.PI*2);
+ctx.fill();
+// draw rotating beams
+ctx.save();
+ctx.translate(state.orb.x, state.orb.y);
+ctx.rotate(state.orb.phase*0.5);
+for(let i=0;i<12;i++){
+  ctx.rotate(Math.PI/6);
+  ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(state.orb.r*0.8,0);
+  ctx.lineTo(state.orb.r*1.4,0);
+  ctx.stroke();
+}
+ctx.restore();
+// draw particles
+for(const p of state.particles){
+  ctx.fillStyle = p.clr;
+  ctx.globalAlpha = p.life/30;
+  ctx.fillRect(p.x-2, p.y-2, 4,4);
+}
+ctx.globalAlpha = 1;
+}
+  }
+  var state = setup(ctx, W, H) || {}, t = 0
+  var steps = Math.max(1, Math.min(32, (state.steps | 0) || 1))
+  function frame() { for (var i = 0; i < steps; i++) update(state, t, W, H); render(ctx, state, t, W, H); t++; requestAnimationFrame(frame) }
+  frame()
+})()
+</script></body></html>
