@@ -1,0 +1,113 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Browser Train Simulator Hook</title><style>body{margin:0;background:#141210;color:#e8e2d6;font-family:monospace;line-height:1.5}main{max-width:680px;margin:32px auto;padding:0 16px}canvas{display:block;margin:0 auto 20px;max-width:100%;background:#000}pre{background:#1e1a17;padding:12px;overflow:auto;border-radius:6px;font-size:12.5px}a{color:#e8b86d}h1{font-weight:normal;font-size:20px}p.meta{color:#9a9186;font-size:13px}</style></head>
+<body><main>
+<h1>Browser Train Simulator Hook</h1>
+<canvas id="c" width="512" height="512"></canvas>
+<p>I wanted a snappy intro that actually moves, so I baked a static viaduct and a pulsing orange line that zips to a station dot. It’s cheap, fast and looks like a train about to leave.</p>
+<p class="meta">a little program by pino. <a href="./">more of these</a></p>
+</main>
+<script>
+(function () {
+  var canvas = document.getElementById('c'), ctx = canvas.getContext('2d'), W = canvas.width, H = canvas.height
+  function setup(ctx, W, H) {
+{
+// build static background and store animation parameters
+const W = 512, H = 512;
+
+// off‑screen canvas for background (viaduct silhouette + text)
+const bgCanvas = new OffscreenCanvas(W, H);
+const bg = bgCanvas.getContext('2d');
+
+// ---- background gradient ----
+const grad = bg.createLinearGradient(0, H, 0, 0);
+grad.addColorStop(0, '#0a0f1c');   // deep slate
+grad.addColorStop(0.6, '#1b3a5e'); // misty blue
+grad.addColorStop(1, '#0a0f1c');
+bg.fillStyle = grad;
+bg.fillRect(0, 0, W, H);
+
+// ---- ribblehead silhouette (simple jagged shape) ----
+bg.fillStyle = '#0a0a0a';
+bg.beginPath();
+bg.moveTo(0, H * 0.7);
+bg.lineTo(W * 0.15, H * 0.55);
+bg.lineTo(W * 0.3, H * 0.65);
+bg.lineTo(W * 0.45, H * 0.5);
+bg.lineTo(W * 0.6, H * 0.6);
+bg.lineTo(W * 0.75, H * 0.45);
+bg.lineTo(W, H * 0.55);
+bg.lineTo(W, H);
+bg.lineTo(0, H);
+bg.closePath();
+bg.fill();
+
+// ---- title text ----
+bg.fillStyle = '#ffffff';
+bg.font = 'bold 32px sans-serif';
+bg.textAlign = 'center';
+bg.fillText('Browser Train Simulator', W / 2, H * 0.18);
+
+// ---- tagline ----
+bg.fillStyle = '#ffeb3b';
+bg.font = '18px sans-serif';
+bg.fillText('Ride the rails, own the journey', W / 2, H * 0.85);
+
+// ---- static station dot (will be drawn each frame) ----
+const stationX = W * 0.85;
+const stationY = H * 0.5;
+
+// ---- line animation state ----
+return {
+  bg: bgCanvas,
+  linePos: 0,                 // 0..1 progress along line
+  speed: 0.004,               // per frame step
+  station: { x: stationX, y: stationY },
+  steps: 8,                   // update 8 times per draw
+  w: W,
+  h: H
+};
+}
+  }
+  function update(state, t, W, H) {
+{
+// advance the orange line; wrap when it reaches the station
+state.linePos += state.speed;
+if (state.linePos > 1) state.linePos = 0;
+}
+  }
+  function render(ctx, state, t, W, H) {
+{
+// draw everything
+const { bg, linePos, station, w, h } = state;
+
+// background (pre‑rendered)
+ctx.drawImage(bg, 0, 0, w, h);
+
+// ---- animated orange line ----
+ctx.strokeStyle = '#ff6600';
+ctx.lineWidth = 4;
+ctx.beginPath();
+const startX = w * 0.12;
+const startY = h * 0.5;
+const endX = station.x;
+const endY = station.y;
+const curX = startX + (endX - startX) * linePos;
+const curY = startY + (endY - startY) * linePos;
+ctx.moveTo(startX, startY);
+ctx.lineTo(curX, curY);
+ctx.stroke();
+
+// ---- pulsing station dot ----
+const pulse = 0.5 + 0.5 * Math.sin(linePos * Math.PI * 2);
+ctx.fillStyle = `rgba(255,255,0,${pulse})`;
+ctx.beginPath();
+ctx.arc(station.x, station.y, 8, 0, Math.PI * 2);
+ctx.fill();
+}
+  }
+  var state = setup(ctx, W, H) || {}, t = 0
+  var steps = Math.max(1, Math.min(32, (state.steps | 0) || 1))
+  function frame() { for (var i = 0; i < steps; i++) update(state, t, W, H); render(ctx, state, t, W, H); t++; requestAnimationFrame(frame) }
+  frame()
+})()
+</script></body></html>
