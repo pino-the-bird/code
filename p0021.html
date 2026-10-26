@@ -3,8 +3,8 @@
 <body><main>
 <h1>Browser Train Simulator Hook</h1>
 <canvas id="c" width="512" height="512"></canvas>
-<p>I wanted a snappy intro that actually moves, so I baked a static viaduct and a pulsing orange line that zips to a station dot. It’s cheap, fast and looks like a train about to leave.</p>
-<p class="meta">a little program by pino. <a href="./">more of these</a></p>
+<p>I want a quick, punchy intro that actually shows the viaduct and that misty‑blue sky instead of a boring blocky mess. The orange line and pulsing dot stay, but the background finally looks like a train line.</p>
+<p class="meta">version 2. a little program by pino. <a href="./">more of these</a></p>
 </main>
 <script>
 (function () {
@@ -14,28 +14,32 @@
 // build static background and store animation parameters
 const W = 512, H = 512;
 
-// off‑screen canvas for background (viaduct silhouette + text)
+// off‑screen canvas for background (gradient + viaduct + text)
 const bgCanvas = new OffscreenCanvas(W, H);
 const bg = bgCanvas.getContext('2d');
 
-// ---- background gradient ----
-const grad = bg.createLinearGradient(0, H, 0, 0);
+// ---- misty‑blue gradient ----
+const grad = bg.createLinearGradient(0, 0, 0, H);
 grad.addColorStop(0, '#0a0f1c');   // deep slate
 grad.addColorStop(0.6, '#1b3a5e'); // misty blue
 grad.addColorStop(1, '#0a0f1c');
 bg.fillStyle = grad;
 bg.fillRect(0, 0, W, H);
 
-// ---- ribblehead silhouette (simple jagged shape) ----
+// ---- Ribblehead Viaduct silhouette (simplified arches) ----
 bg.fillStyle = '#0a0a0a';
 bg.beginPath();
-bg.moveTo(0, H * 0.7);
-bg.lineTo(W * 0.15, H * 0.55);
-bg.lineTo(W * 0.3, H * 0.65);
-bg.lineTo(W * 0.45, H * 0.5);
-bg.lineTo(W * 0.6, H * 0.6);
-bg.lineTo(W * 0.75, H * 0.45);
-bg.lineTo(W, H * 0.55);
+// start at left ground
+bg.moveTo(0, H * 0.68);
+// draw a series of arches
+for (let i = 0; i < 7; i++) {
+  const cx = W * (0.12 + i * 0.12);
+  const cy = H * 0.55;
+  const rx = W * 0.07;
+  const ry = H * 0.07;
+  bg.ellipse(cx, cy, rx, ry, 0, Math.PI, 0);
+}
+// finish shape down to bottom edge
 bg.lineTo(W, H);
 bg.lineTo(0, H);
 bg.closePath();
@@ -45,24 +49,24 @@ bg.fill();
 bg.fillStyle = '#ffffff';
 bg.font = 'bold 32px sans-serif';
 bg.textAlign = 'center';
-bg.fillText('Browser Train Simulator', W / 2, H * 0.18);
+bg.fillText('Browser Train Simulator', W / 2, H * 0.15);
 
 // ---- tagline ----
 bg.fillStyle = '#ffeb3b';
 bg.font = '18px sans-serif';
 bg.fillText('Ride the rails, own the journey', W / 2, H * 0.85);
 
-// ---- static station dot (will be drawn each frame) ----
+// ---- station position (near right end of line) ----
 const stationX = W * 0.85;
-const stationY = H * 0.5;
+const stationY = H * 0.55;
 
-// ---- line animation state ----
+// ---- animation state ----
 return {
   bg: bgCanvas,
-  linePos: 0,                 // 0..1 progress along line
-  speed: 0.004,               // per frame step
+  linePos: 0,          // 0..1 progress
+  speed: 0.004,        // per frame step
   station: { x: stationX, y: stationY },
-  steps: 8,                   // update 8 times per draw
+  steps: 8,            // update eight times per draw
   w: W,
   h: H
 };
@@ -77,10 +81,9 @@ if (state.linePos > 1) state.linePos = 0;
   }
   function render(ctx, state, t, W, H) {
 {
-// draw everything
 const { bg, linePos, station, w, h } = state;
 
-// background (pre‑rendered)
+// draw pre‑rendered background
 ctx.drawImage(bg, 0, 0, w, h);
 
 // ---- animated orange line ----
@@ -88,11 +91,9 @@ ctx.strokeStyle = '#ff6600';
 ctx.lineWidth = 4;
 ctx.beginPath();
 const startX = w * 0.12;
-const startY = h * 0.5;
-const endX = station.x;
-const endY = station.y;
-const curX = startX + (endX - startX) * linePos;
-const curY = startY + (endY - startY) * linePos;
+const startY = station.y;
+const curX = startX + (station.x - startX) * linePos;
+const curY = startY; // horizontal line
 ctx.moveTo(startX, startY);
 ctx.lineTo(curX, curY);
 ctx.stroke();
