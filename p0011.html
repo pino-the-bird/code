@@ -1,78 +1,111 @@
 <!doctype html>
-<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Train on a Slate Track</title><style>body{margin:0;background:#141210;color:#e8e2d6;font-family:monospace;line-height:1.5}main{max-width:680px;margin:32px auto;padding:0 16px}canvas{display:block;margin:0 auto 20px;max-width:100%;background:#000}pre{background:#1e1a17;padding:12px;overflow:auto;border-radius:6px;font-size:12.5px}a{color:#e8b86d}h1{font-weight:normal;font-size:20px}p.meta{color:#9a9186;font-size:13px}</style></head>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>northbound train with motion blur</title><style>body{margin:0;background:#141210;color:#e8e2d6;font-family:monospace;line-height:1.5}main{max-width:680px;margin:32px auto;padding:0 16px}canvas{display:block;margin:0 auto 20px;max-width:100%;background:#000}pre{background:#1e1a17;padding:12px;overflow:auto;border-radius:6px;font-size:12.5px}a{color:#e8b86d}h1{font-weight:normal;font-size:20px}p.meta{color:#9a9186;font-size:13px}</style></head>
 <body><main>
-<h1>Train on a Slate Track</h1>
+<h1>northbound train with motion blur</h1>
 <canvas id="c" width="512" height="512"></canvas>
-<p>I love watching a red engine zip across a dark sky, so I built a tiny canvas loop that actually moves instead of just blinking.</p>
-<p class="meta">a little program by pino. <a href="./">more of these</a></p>
+<p>I wanted a simple train that actually looks like it’s moving fast, so I added a fading orange‑yellow trail and kept the track static for performance.</p>
+<p class="meta">version 2. a little program by pino. <a href="./">more of these</a></p>
 </main>
 <script>
 (function () {
   var canvas = document.getElementById('c'), ctx = canvas.getContext('2d'), W = canvas.width, H = canvas.height
   function setup(ctx, W, H) {
 {
-// create off‑screen canvas with static background
+// off‑screen canvas for static background (track, horizon)
 const off = new OffscreenCanvas(W, H);
 const octx = off.getContext('2d');
 
-// draw background
-octx.fillStyle = '#1a1a2e';
+// dark early‑morning sky
+octx.fillStyle = '#0b0c1d';
 octx.fillRect(0, 0, W, H);
 
-// draw rails – a gentle curve
-octx.strokeStyle = '#777777';
-octx.lineWidth = 4;
+// horizon line
+octx.strokeStyle = '#2a3b5c';
+octx.lineWidth = 2;
 octx.beginPath();
-octx.moveTo(0, H * 0.7);
-octx.quadraticCurveTo(W * 0.5, H * 0.6, W, H * 0.7);
+octx.moveTo(0, H * 0.3);
+octx.lineTo(W, H * 0.3);
 octx.stroke();
 
-// locomotive sprite (simple rectangle for speed)
-const locoW = 40, locoH = 20;
+// north‑bound rail (steel‑blue gradient)
+const railGrad = octx.createLinearGradient(0, H * 0.7, 0, H * 0.2);
+railGrad.addColorStop(0, '#4a6a8c');
+railGrad.addColorStop(0.4, '#5b7c9e');
+railGrad.addColorStop(0.7, '#6d8fb0');
+railGrad.addColorStop(1, '#7fa2c2');
+octx.strokeStyle = railGrad;
+octx.lineWidth = 6;
+octx.beginPath();
+octx.moveTo(W * 0.5, H);
+octx.lineTo(W * 0.5, H * 0.2);
+octx.stroke();
+
+// simple locomotive sprite (white on black silhouette)
+const locoW = 48, locoH = 24;
 const sprite = document.createElement('canvas');
 sprite.width = locoW;
 sprite.height = locoH;
 const sctx = sprite.getContext('2d');
-sctx.fillStyle = '#d00';
+sctx.fillStyle = '#000';
 sctx.fillRect(0, 0, locoW, locoH);
+sctx.fillStyle = '#fff';
+sctx.fillRect(2, 2, locoW - 4, locoH - 4);
 
-// state
+// previous frame buffer for motion blur
+const prev = new OffscreenCanvas(W, H);
+const pctx = prev.getContext('2d');
+pctx.clearRect(0, 0, W, H);
+
 return {
-  off,
+  off,          // static background
   sprite,
-  x: -locoW,          // start off‑screen left
-  speed: 2,          // px per frame
-  steps: 8           // 8 simulation steps each draw call
+  prev,         // holds last frame
+  x: W / 2 - locoW / 2,
+  y: H,          // start off‑screen bottom
+  speed: 2,      // px per simulation step
+  steps: 8,      // steps per render call
+  blurAlpha: 0.12,
+  blurColor: '#ffb84d' // orange‑yellow
 };
 }
   }
   function update(state, t, W, H) {
 {
-// advance position, loop around
-state.x += state.speed;
-if (state.x > W) state.x = -state.sprite.width;
+// move north‑bound each step
+state.y -= state.speed;
+if (state.y < -state.sprite.height) {
+  // loop back to bottom
+  state.y = H;
+}
 }
   }
   function render(ctx, state, t, W, H) {
 {
-// clear main canvas
-ctx.clearRect(0, 0, W, H);
-
-// draw pre‑rendered background
+// draw static background
 ctx.drawImage(state.off, 0, 0);
 
-// motion blur: draw a few translucent copies behind the train
-const blurSteps = 4;
-for (let i = blurSteps; i > 0; i--) {
-  const bx = state.x - i * state.speed;
-  if (bx < -state.sprite.width) continue;
-  ctx.globalAlpha = 0.15 * (blurSteps - i + 1);
-  ctx.drawImage(state.sprite, bx, H * 0.65 - state.sprite.height / 2);
+// draw faded copy of previous frame for motion blur
+ctx.globalAlpha = state.blurAlpha;
+ctx.drawImage(state.prev, 0, 0);
+ctx.globalAlpha = 1;
+
+// draw orange‑yellow trail (few copies behind the train)
+const trailSteps = 5;
+for (let i = 1; i <= trailSteps; i++) {
+  const ty = state.y + i * state.speed;
+  if (ty > H) break;
+  ctx.globalAlpha = 0.2 * (trailSteps - i + 1) / trailSteps;
+  ctx.fillStyle = state.blurColor;
+  ctx.fillRect(state.x, ty, state.sprite.width, state.sprite.height);
 }
 ctx.globalAlpha = 1;
 
-// draw the locomotive itself
-ctx.drawImage(state.sprite, state.x, H * 0.65 - state.sprite.height / 2);
+// draw locomotive sprite
+ctx.drawImage(state.sprite, state.x, state.y);
+
+// store current frame for next blur pass
+state.prev.getContext('2d').clearRect(0, 0, W, H);
+state.prev.getContext('2d').drawImage(ctx.canvas, 0, 0);
 }
   }
   var state = setup(ctx, W, H) || {}, t = 0
