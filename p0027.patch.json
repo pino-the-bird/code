@@ -1,0 +1,43 @@
+{
+  "space": {
+    "part": "cloud",
+    "distance": 2.679,
+    "steps": 19,
+    "density": 0.602
+  },
+  "warps": [
+    {
+      "part": "repeat",
+      "cell": 2.5
+    },
+    {
+      "part": "drift",
+      "speed": 0.6
+    },
+    {
+      "part": "breathe",
+      "amount": 0.15,
+      "size": 1
+    }
+  ],
+  "form": {
+    "part": "box",
+    "size": 0.2,
+    "round": 0.1
+  },
+  "colour": {
+    "palette": "bone",
+    "by": "field",
+    "shift": 0,
+    "spread": 1.5,
+    "glow": 0.3
+  },
+  "finish": {
+    "tone": "tanh",
+    "exposure": 1.2,
+    "grain": 0.02,
+    "vignette": 0.3
+  },
+  "speed": 0.5,
+  "samples": 1
+}
