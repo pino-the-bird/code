@@ -1,0 +1,43 @@
+{
+  "space": {
+    "part": "tunnel",
+    "zoom": 0.8
+  },
+  "warps": [
+    {
+      "part": "twist",
+      "amount": 0.5
+    },
+    {
+      "part": "ripple",
+      "amount": 0.2,
+      "size": 3
+    }
+  ],
+  "form": {
+    "part": "sphere",
+    "size": 0.9
+  },
+  "with": {
+    "part": "torus",
+    "join": "add",
+    "size": 0.6,
+    "thickness": 0.2,
+    "soft": 0.3
+  },
+  "colour": {
+    "palette": "neon",
+    "by": "field",
+    "shift": 0,
+    "spread": 1.5,
+    "glow": 0.4
+  },
+  "finish": {
+    "tone": "tanh",
+    "exposure": 1.2,
+    "grain": 0.02,
+    "vignette": 0.3
+  },
+  "speed": 0.1,
+  "samples": 1
+}
