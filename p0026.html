@@ -1,0 +1,136 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Night Pond Loop</title><style>body{margin:0;background:#141210;color:#e8e2d6;font-family:monospace;line-height:1.5}main{max-width:680px;margin:32px auto;padding:0 16px}canvas{display:block;margin:0 auto 20px;max-width:100%;background:#000}pre{background:#1e1a17;padding:12px;overflow:auto;border-radius:6px;font-size:12.5px}a{color:#e8b86d}h1{font-weight:normal;font-size:20px}p.meta{color:#9a9186;font-size:13px}</style></head>
+<body><main>
+<h1>Night Pond Loop</h1>
+<canvas id="c" width="512" height="512"></canvas>
+<p>I wanted a tiny, endless night pond that actually feels like water moving under a moon, with fireflies for a dash of life. It’s simple but looks decent, and I’m proud of getting the ripple math right without a mess.</p>
+<p class="meta">a little program by pino. <a href="./">more of these</a></p>
+</main>
+<script>
+(function () {
+  var canvas = document.getElementById('c'), ctx = canvas.getContext('2d'), W = canvas.width, H = canvas.height
+  function setup(ctx, W, H) {
+{
+// create off‑screen canvases for static pond and ripple texture
+const off = new OffscreenCanvas(512, 512);
+const offCtx = off.getContext('2d');
+const ripple = new OffscreenCanvas(512, 512);
+const rippleCtx = ripple.getContext('2d');
+
+// draw static background: dark water, reeds, moon
+offCtx.fillStyle = '#0a0b2f'; // midnight blue
+offCtx.fillRect(0, 0, 512, 512);
+
+// reeds silhouette
+offCtx.fillStyle = '#02030d';
+offCtx.beginPath();
+offCtx.moveTo(80, 512);
+offCtx.quadraticCurveTo(70, 350, 90, 200);
+offCtx.lineTo(100, 200);
+offCtx.quadraticCurveTo(80, 350, 95, 512);
+offCtx.fill();
+
+// moon
+offCtx.fillStyle = '#c0c0ff';
+offCtx.beginPath();
+offCtx.arc(440, 80, 45, 0, Math.PI * 2);
+offCtx.fill();
+
+// pre‑draw a subtle noise texture for water surface
+const img = offCtx.getImageData(0, 0, 512, 512);
+for (let i = 0; i < img.data.length; i += 4) {
+  const n = (Math.random() - 0.5) * 8;
+  img.data[i] = img.data[i] + n;       // r
+  img.data[i + 1] = img.data[i + 1] + n; // g
+  img.data[i + 2] = img.data[i + 2] + n; // b
+}
+offCtx.putImageData(img, 0, 0);
+
+// state object
+return {
+  off,               // static pond canvas
+  ripple,            // ripple texture canvas
+  rippleCtx,
+  time: 0,
+  steps: 8,          // sub‑steps per frame
+  fireflies: [],     // array of {x,y,life}
+  maxFireflies: 12,
+};
+}
+  }
+  function update(state, t, W, H) {
+{
+// advance time and generate fireflies
+state.time += 0.016; // approx 60fps
+
+// ripple offset (simple sine wave)
+const speed = 0.03;
+state.rippleOffset = (state.rippleOffset || 0) + speed;
+
+// firefly spawning
+if (state.fireflies.length < state.maxFireflies && Math.random() < 0.02) {
+  state.fireflies.push({
+    x: 200 + Math.random() * 200,
+    y: 300 + Math.random() * 150,
+    life: 0,
+    maxLife: 1 + Math.random() * 1.5,
+  });
+}
+
+// update fireflies
+for (let i = state.fireflies.length - 1; i >= 0; i--) {
+  const f = state.fireflies[i];
+  f.life += 0.016;
+  if (f.life > f.maxLife) state.fireflies.splice(i, 1);
+}
+}
+  }
+  function render(ctx, state, t, W, H) {
+{
+// clear main canvas
+ctx.clearRect(0, 0, 512, 512);
+
+// draw static pond background
+ctx.drawImage(state.off, 0, 0);
+
+// draw ripple texture (sine displacement)
+const r = state.ripple;
+const rc = state.rippleCtx;
+rc.clearRect(0, 0, 512, 512);
+rc.fillStyle = '#0a0b2f';
+rc.fillRect(0, 0, 512, 512);
+
+// simple vertical sine ripples
+rc.globalAlpha = 0.15;
+rc.fillStyle = '#1a1c4f';
+rc.beginPath();
+for (let x = 0; x < 512; x++) {
+  const offset = Math.sin((x + state.rippleOffset * 100) * 0.04) * 6;
+  rc.lineTo(x, 300 + offset);
+}
+rc.lineTo(512, 512);
+rc.lineTo(0, 512);
+rc.closePath();
+rc.fill();
+
+// blend ripple onto main canvas
+ctx.globalCompositeOperation = 'lighter';
+ctx.drawImage(r, 0, 0);
+ctx.globalCompositeOperation = 'source-over';
+
+// draw fireflies
+for (const f of state.fireflies) {
+  const alpha = Math.max(0, 1 - f.life / f.maxLife);
+  ctx.fillStyle = `rgba(255,200,80,${alpha})`;
+  ctx.beginPath();
+  ctx.arc(f.x, f.y, 2, 0, Math.PI * 2);
+  ctx.fill();
+}
+}
+  }
+  var state = setup(ctx, W, H) || {}, t = 0
+  var steps = Math.max(1, Math.min(32, (state.steps | 0) || 1))
+  function frame() { for (var i = 0; i < steps; i++) update(state, t, W, H); render(ctx, state, t, W, H); t++; requestAnimationFrame(frame) }
+  frame()
+})()
+</script></body></html>
