@@ -1,26 +1,26 @@
-// Night Tunnel Loop v2
+// Night Tunnel Loop v3
 // SPDX-License-Identifier: CC-BY-NC-SA-4.0
 // Copyright (c) 2026 pino (https://pino-the-bird.github.io/code/p0029.html)
 // https://creativecommons.org/licenses/by-nc-sa/4.0/
 // uniforms: vec3 iResolution, float iTime, vec4 iMouse, int iFrame
 
-const float P_w0_amount = 0.758;
-const float P_w1_speed = 0.828;
-const float P_w2_amount = 0.271;
-const float P_w2_size = 1.695;
-const float P_a_cell = 0.966;
-const float P_a_thickness = 0.081;
-const float P_b_scale = 1.5;
-const float P_b_layers = 3.946;
-const float P_b_cover = 0.5;
-const float P_s_zoom = 1.105;
-const float P_shift = 0.0;
-const float P_spread = 2.0;
-const float P_glow = 0.8;
-const float P_exposure = 1.224;
-const float P_grain = 0.024;
-const float P_vignette = 0.272;
-const float P_speed = 0.5;
+const float P_w0_speed = 0.81;
+const float P_w1_amount = 0.32;
+const float P_w2_amount = 0.377;
+const float P_w2_size = 3.105;
+const float P_a_scale = 1.413;
+const float P_a_edge = 0.093;
+const float P_b_scale = 1.399;
+const float P_b_layers = 4.1;
+const float P_b_cover = 0.539;
+const float P_s_zoom = 1.012;
+const float P_shift = 0.162;
+const float P_spread = 1.67;
+const float P_glow = 0.779;
+const float P_exposure = 1.23;
+const float P_grain = 0.022;
+const float P_vignette = 0.256;
+const float P_speed = 0.592;
 
 float PAL_T = 0.0;
 
@@ -49,25 +49,25 @@ float fbm(vec3 p, float layers) {
 float smin(float a, float b, float k) { float h = clamp(0.5 + 0.5 * (b - a) / k, 0.0, 1.0); return mix(b, a, h) - k * h * (1.0 - h); }
 
 
-vec3 pal(float x) { return vec3(0.2, 0.4, 0.5) + vec3(0.3, 0.3, 0.35) * cos(6.28318 * (vec3(1.0, 1.0, 1.0) * x * P_spread + vec3(0.5, 0.6, 0.7) + P_shift + PAL_T * 0.04)); }
+vec3 pal(float x) { return vec3(0.5, 0.5, 0.5) + vec3(0.5, 0.5, 0.5) * cos(6.28318 * (vec3(2.0, 1.0, 0.0) * x * P_spread + vec3(0.5, 0.2, 0.25) + P_shift + PAL_T * 0.04)); }
 
 vec3 warp0(vec3 p, float t) {
-  p.xy = rot(p.z * P_w0_amount) * p.xy;
+  p.z += t * P_w0_speed;
   return p;
 }
 
 vec3 warp1(vec3 p, float t) {
-  p.z += t * P_w1_speed;
+  p.xy = rot(p.z * P_w1_amount) * p.xy;
   return p;
 }
 
 vec3 warp2(vec3 p, float t) {
-  p *= 1.0 + P_w2_amount * sin(t * 2.0 - length(p) * P_w2_size);
+  p += P_w2_amount * sin(p.yzx * P_w2_size + t);
   return p;
 }
 
 float formA(vec3 p) {
-  vec3 q = abs(mod(p + 0.5 * P_a_cell, P_a_cell) - 0.5 * P_a_cell); return min(min(max(q.x, q.y), max(q.y, q.z)), max(q.z, q.x)) - P_a_thickness;
+  vec2 g = p.xy * P_a_scale; vec2 i = floor(g); vec2 f = fract(g); float a = 8.0; float b = 8.0; for (int y = -1; y <= 1; y++) { for (int x = -1; x <= 1; x++) { vec2 o = vec2(float(x), float(y)); vec2 c = o + vec2(hash(i + o), hash(i + o + 19.7)); float e = length(c - f); if (e < a) { b = a; a = e; } else if (e < b) { b = e; } } } return (P_a_edge - (b - a)) / P_a_scale;
 }
 
 float formB(vec3 p) {
@@ -111,7 +111,7 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
     col += look(uv, t);
   }
   vec3 c = col / 1.0 * P_exposure;
-  c = clamp(c, 0.0, 1.0);
+  c = clamp((c * (2.51 * c + 0.03)) / (c * (2.43 * c + 0.59) + 0.14), 0.0, 1.0);
   vec2 q = fragCoord / iResolution.xy - 0.5;
   c *= 1.0 - P_vignette * dot(q, q) * 2.0;
   c += (hash(fragCoord + fract(iTime) * 91.7) - 0.5) * P_grain;
