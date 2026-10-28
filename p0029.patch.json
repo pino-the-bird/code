@@ -1,49 +1,49 @@
 {
   "space": {
     "part": "tunnel",
-    "zoom": 1.105
+    "zoom": 1.012
   },
   "warps": [
     {
-      "part": "twist",
-      "amount": 0.758
-    },
-    {
       "part": "drift",
-      "speed": 0.828
+      "speed": 0.81
     },
     {
-      "part": "breathe",
-      "amount": 0.271,
-      "size": 1.695
+      "part": "twist",
+      "amount": 0.32
+    },
+    {
+      "part": "ripple",
+      "amount": 0.377,
+      "size": 3.105
     }
   ],
   "form": {
-    "part": "lattice",
-    "cell": 0.966,
-    "thickness": 0.081
+    "part": "cells",
+    "scale": 1.413,
+    "edge": 0.093
   },
   "with": {
     "part": "clouds",
     "join": "add",
-    "scale": 1.5,
-    "layers": 3.946,
-    "cover": 0.5,
-    "soft": 0.401
+    "scale": 1.399,
+    "layers": 4.1,
+    "cover": 0.539,
+    "soft": 0.39
   },
   "colour": {
-    "palette": "sea",
+    "palette": "neon",
     "by": "field",
-    "shift": 0,
-    "spread": 2,
-    "glow": 0.8
+    "shift": 0.162,
+    "spread": 1.67,
+    "glow": 0.779
   },
   "finish": {
-    "tone": "none",
-    "exposure": 1.224,
-    "grain": 0.024,
-    "vignette": 0.272
+    "tone": "filmic",
+    "exposure": 1.23,
+    "grain": 0.022,
+    "vignette": 0.256
   },
-  "speed": 0.5,
+  "speed": 0.592,
   "samples": 1
 }
