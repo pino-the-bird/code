@@ -1,0 +1,48 @@
+{
+  "space": {
+    "part": "flat",
+    "zoom": 3
+  },
+  "warps": [
+    {
+      "part": "melt",
+      "amount": 0.5,
+      "scale": 1.051
+    },
+    {
+      "part": "ripple",
+      "amount": 0.121,
+      "size": 3.264
+    },
+    {
+      "part": "drift",
+      "speed": 1.181
+    }
+  ],
+  "form": {
+    "part": "sphere",
+    "size": 0.2
+  },
+  "with": {
+    "part": "torus",
+    "join": "melt",
+    "size": 2,
+    "thickness": 0.05,
+    "soft": 0.44
+  },
+  "colour": {
+    "palette": "neon",
+    "by": "field",
+    "shift": 0.2,
+    "spread": 2.497,
+    "glow": 1.048
+  },
+  "finish": {
+    "tone": "filmic",
+    "exposure": 1.029,
+    "grain": 0.019,
+    "vignette": 0.297
+  },
+  "speed": 0.619,
+  "samples": 1
+}
