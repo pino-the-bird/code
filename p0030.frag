@@ -1,26 +1,28 @@
-// ghost line on rails
+// Ghost Line on Train
 // SPDX-License-Identifier: CC-BY-NC-SA-4.0
 // Copyright (c) 2026 pino (https://pino-the-bird.github.io/code/p0030.html)
 // https://creativecommons.org/licenses/by-nc-sa/4.0/
 // uniforms: vec3 iResolution, float iTime, vec4 iMouse, int iFrame
 
-const float P_w0_scale = 1.051;
-const float P_w0_amount = 0.5;
-const float P_w1_amount = 0.121;
-const float P_w1_size = 3.264;
-const float P_w2_speed = 1.181;
-const float P_a_size = 0.2;
+const float P_w0_cell = 2.5;
+const float P_w1_amount = 0.4;
+const float P_w2_speed = 0.6;
+const float P_w3_scale = 1.2;
+const float P_w3_amount = 0.8;
+const float P_a_size = 0.8;
+const float P_a_round = 0.1;
 const float P_b_size = 2.0;
 const float P_b_thickness = 0.05;
 const float P_b_soft = 0.44;
-const float P_s_zoom = 3.0;
+const float P_s_zoom = 2.082;
+const float P_s_arms = 2.022;
 const float P_shift = 0.2;
-const float P_spread = 2.497;
-const float P_glow = 1.048;
-const float P_exposure = 1.029;
-const float P_grain = 0.019;
-const float P_vignette = 0.297;
-const float P_speed = 0.619;
+const float P_spread = 1.5;
+const float P_glow = 0.3;
+const float P_exposure = 1.0;
+const float P_grain = 0.02;
+const float P_vignette = 0.3;
+const float P_speed = 0.62;
 
 float PAL_T = 0.0;
 
@@ -49,15 +51,15 @@ float fbm(vec3 p, float layers) {
 float smin(float a, float b, float k) { float h = clamp(0.5 + 0.5 * (b - a) / k, 0.0, 1.0); return mix(b, a, h) - k * h * (1.0 - h); }
 
 
-vec3 pal(float x) { return vec3(0.5, 0.5, 0.5) + vec3(0.5, 0.5, 0.5) * cos(6.28318 * (vec3(2.0, 1.0, 0.0) * x * P_spread + vec3(0.5, 0.2, 0.25) + P_shift + PAL_T * 0.04)); }
+vec3 pal(float x) { return vec3(0.2, 0.4, 0.5) + vec3(0.3, 0.3, 0.35) * cos(6.28318 * (vec3(1.0, 1.0, 1.0) * x * P_spread + vec3(0.5, 0.6, 0.7) + P_shift + PAL_T * 0.04)); }
 
 vec3 warp0(vec3 p, float t) {
-  vec3 q = p * P_w0_scale + t * 0.3; p += P_w0_amount * (vec3(noise(q), noise(q + 17.1), noise(q - 9.3)) - 0.5);
+  p = abs(mod(p + 1.5 * P_w0_cell, 2.0 * P_w0_cell) - P_w0_cell) - 0.5 * P_w0_cell;
   return p;
 }
 
 vec3 warp1(vec3 p, float t) {
-  p += P_w1_amount * sin(p.yzx * P_w1_size + t);
+  p.xy = rot(p.z * P_w1_amount) * p.xy;
   return p;
 }
 
@@ -66,8 +68,13 @@ vec3 warp2(vec3 p, float t) {
   return p;
 }
 
+vec3 warp3(vec3 p, float t) {
+  vec3 q = p * P_w3_scale + t * 0.3; p += P_w3_amount * (vec3(noise(q), noise(q + 17.1), noise(q - 9.3)) - 0.5);
+  return p;
+}
+
 float formA(vec3 p) {
-  return length(p) - P_a_size;
+  vec3 q = abs(p) - vec3(P_a_size); return length(max(q, 0.0)) + min(max(q.x, max(q.y, q.z)), 0.0) - P_a_round;
 }
 
 float formB(vec3 p) {
@@ -79,6 +86,7 @@ float field(vec3 p, float t) {
   p = warp0(p, t);
   p = warp1(p, t);
   p = warp2(p, t);
+  p = warp3(p, t);
   float a = formA(p);
   float b = formB(p);
   a = smin(a, b, P_b_soft);
@@ -86,12 +94,16 @@ float field(vec3 p, float t) {
 }
 
 vec3 look(vec2 uv, float t) {
-  vec3 p = vec3(uv * P_s_zoom, 0.0);
+  float r = max(length(uv), 1e-4);
+  // (tiled, so a form recurs all the way in and round: one form at the middle was missed by nearly every pixel)
+  // (and each tile the mirror of the next, so they meet: cut off at the edge of each, his fourth from the engine, p0029,
+  // went up with a hard line out to the right and a ring at every tile)
+  vec3 p = vec3(abs(mod(log(r) * P_s_zoom - t * 0.3 + 2.0, 4.0) - 2.0) - 1.0, abs(mod(atan(uv.y, uv.x) / 3.14159 * floor(P_s_arms) + 2.0, 4.0) - 2.0) - 1.0, 0.0) * 1.5;
   float d = field(p, t);
-  float v = (d * 2.0);
-  vec3 col = pal(v) * smoothstep(0.012 * P_s_zoom, -0.012 * P_s_zoom, d);
-  col += pal(v + 0.15) * P_glow * exp(-abs(d) * 5.0 / P_s_zoom);
-  return col + pal(v + 0.5) * 0.04;
+  float v = (length(uv) * 0.6);
+  vec3 col = pal(v) * smoothstep(0.02, -0.02, d);
+  col += pal(v + 0.15) * P_glow * exp(-abs(d) * 4.0);
+  return (col + pal(v + 0.5) * 0.04) * smoothstep(0.0, 0.15, r);
 }
 
 void mainImage(out vec4 fragColor, in vec2 fragCoord) {
