@@ -1,12 +1,12 @@
 <!doctype html>
-<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>ghost line on rails</title><style>body{margin:0;background:#141210;color:#e8e2d6;font-family:monospace;line-height:1.5}main{max-width:680px;margin:32px auto;padding:0 16px}canvas{display:block;margin:0 auto 20px;max-width:100%;background:#000}pre{background:#1e1a17;padding:12px;overflow:auto;border-radius:6px;font-size:12.5px}a{color:#e8b86d}h1{font-weight:normal;font-size:20px}p.meta{color:#9a9186;font-size:13px}canvas,img.still{width:512px;aspect-ratio:1;cursor:crosshair}.dials{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:6px 16px;margin:0 0 20px;font-size:12px;color:#9a9186}.dials label{display:flex;flex-direction:column}.dials input{width:100%;accent-color:#e8b86d}img.still{display:none;margin:0 auto 20px;max-width:100%}</style></head>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Ghost Line on Train</title><style>body{margin:0;background:#141210;color:#e8e2d6;font-family:monospace;line-height:1.5}main{max-width:680px;margin:32px auto;padding:0 16px}canvas{display:block;margin:0 auto 20px;max-width:100%;background:#000}pre{background:#1e1a17;padding:12px;overflow:auto;border-radius:6px;font-size:12.5px}a{color:#e8b86d}h1{font-weight:normal;font-size:20px}p.meta{color:#9a9186;font-size:13px}canvas,img.still{width:512px;aspect-ratio:1;cursor:crosshair}.dials{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:6px 16px;margin:0 0 20px;font-size:12px;color:#9a9186}.dials label{display:flex;flex-direction:column}.dials input{width:100%;accent-color:#e8b86d}img.still{display:none;margin:0 auto 20px;max-width:100%}</style></head>
 <body><main>
-<h1>ghost line on rails</h1>
-<canvas id="c" width="512" height="512"></canvas><img class="still" id="still" src="./p0030.png" alt="a frame of ghost line on rails">
-<p>I wanted a thin neon trail that actually looks like it belongs on a railway, not some half‑baked overlay. This version melts the line into the track and drifts forward so it feels like a train’s ghost.</p>
-<p class="meta">a shader by pino, 2026. GLSL, running live on your graphics card. <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>. the shader is <a href="./p0030.frag">here</a>. <a href="./">more of these</a></p>
-<p class="meta">made from the shader engine's parts: the picture plane itself; melted by slow noise, then rippled by sine waves, then drifting forward; of a sphere, with a ring melted together; in neon colours. turn the dials to play with it. the parts are <a href="./p0030.patch.json">here</a>.</p>
-<div class="dials"><label>melt: how big the swirls<input type="range" data-u="P_w0_scale" min="0.3" max="4" step="0.0185" value="1.051"></label><label>melt: how far<input type="range" data-u="P_w0_amount" min="0" max="1.5" step="0.0075" value="0.5"></label><label>ripple: how far<input type="range" data-u="P_w1_amount" min="0" max="1" step="0.005" value="0.121"></label><label>ripple: how close together<input type="range" data-u="P_w1_size" min="0.5" max="6" step="0.0275" value="3.264"></label><label>drift: how fast<input type="range" data-u="P_w2_speed" min="0" max="3" step="0.015" value="1.181"></label><label>sphere: how big<input type="range" data-u="P_a_size" min="0.2" max="2" step="0.009" value="0.2"></label><label>torus: how wide<input type="range" data-u="P_b_size" min="0.3" max="2" step="0.0085" value="2"></label><label>torus: how thick<input type="range" data-u="P_b_thickness" min="0.05" max="0.8" step="0.0038" value="0.05"></label><label>join: how soft the melt<input type="range" data-u="P_b_soft" min="0.05" max="1" step="0.0048" value="0.44"></label><label>flat: how far out you are<input type="range" data-u="P_s_zoom" min="0.5" max="8" step="0.0375" value="3"></label><label>colour: where in the palette it starts<input type="range" data-u="P_shift" min="0" max="1" step="0.005" value="0.2"></label><label>colour: how much of the palette it uses<input type="range" data-u="P_spread" min="0.2" max="3" step="0.014" value="2.497"></label><label>colour: how much it glows<input type="range" data-u="P_glow" min="0" max="2" step="0.01" value="1.048"></label><label>finish: how bright<input type="range" data-u="P_exposure" min="0.4" max="2.5" step="0.0105" value="1.029"></label><label>finish: how much film grain<input type="range" data-u="P_grain" min="0" max="0.08" step="0.0004" value="0.019"></label><label>finish: how dark the corners<input type="range" data-u="P_vignette" min="0" max="1" step="0.005" value="0.297"></label><label>speed: how fast it all moves<input type="range" data-u="P_speed" min="0.1" max="2" step="0.0095" value="0.619"></label></div>
+<h1>Ghost Line on Train</h1>
+<canvas id="c" width="512" height="512"></canvas><img class="still" id="still" src="./p0030.png" alt="a frame of Ghost Line on Train">
+<p>I wanted a neon pink‑blue line that actually melts into the rail, not just sit on top. This version blends the line with the track and gives it the proper ghostly hue.</p>
+<p class="meta">version 3. a shader by pino, 2026. GLSL, running live on your graphics card. <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>. the shader is <a href="./p0030.frag">here</a>. <a href="./">more of these</a></p>
+<p class="meta">made from the shader engine's parts: round the centre; repeated, then twisted along its length, then drifting forward, then melted by slow noise; of a box with rounded edges, with a ring melted together; in the sea colours. turn the dials to play with it. the parts are <a href="./p0030.patch.json">here</a>.</p>
+<div class="dials"><label>repeat: how far apart the copies<input type="range" data-u="P_w0_cell" min="0.5" max="6" step="0.0275" value="2.5"></label><label>twist: how hard, and which way<input type="range" data-u="P_w1_amount" min="-3" max="3" step="0.03" value="0.4"></label><label>drift: how fast<input type="range" data-u="P_w2_speed" min="0" max="3" step="0.015" value="0.6"></label><label>melt: how big the swirls<input type="range" data-u="P_w3_scale" min="0.3" max="4" step="0.0185" value="1.2"></label><label>melt: how far<input type="range" data-u="P_w3_amount" min="0" max="1.5" step="0.0075" value="0.8"></label><label>box: how big<input type="range" data-u="P_a_size" min="0.2" max="1.6" step="0.007" value="0.8"></label><label>box: how round its edges<input type="range" data-u="P_a_round" min="0" max="0.5" step="0.0025" value="0.1"></label><label>torus: how wide<input type="range" data-u="P_b_size" min="0.3" max="2" step="0.0085" value="2"></label><label>torus: how thick<input type="range" data-u="P_b_thickness" min="0.05" max="0.8" step="0.0038" value="0.05"></label><label>join: how soft the melt<input type="range" data-u="P_b_soft" min="0.05" max="1" step="0.0048" value="0.44"></label><label>polar: how close the rings are<input type="range" data-u="P_s_zoom" min="0.5" max="6" step="0.0275" value="2.082"></label><label>polar: how many times it goes round<input type="range" data-u="P_s_arms" min="1" max="12" step="0.055" value="2.022"></label><label>colour: where in the palette it starts<input type="range" data-u="P_shift" min="0" max="1" step="0.005" value="0.2"></label><label>colour: how much of the palette it uses<input type="range" data-u="P_spread" min="0.2" max="3" step="0.014" value="1.5"></label><label>colour: how much it glows<input type="range" data-u="P_glow" min="0" max="2" step="0.01" value="0.3"></label><label>finish: how bright<input type="range" data-u="P_exposure" min="0.4" max="2.5" step="0.0105" value="1"></label><label>finish: how much film grain<input type="range" data-u="P_grain" min="0" max="0.08" step="0.0004" value="0.02"></label><label>finish: how dark the corners<input type="range" data-u="P_vignette" min="0" max="1" step="0.005" value="0.3"></label><label>speed: how fast it all moves<input type="range" data-u="P_speed" min="0.1" max="2" step="0.0095" value="0.62"></label></div>
 </main>
 <script id="fs" type="x-shader/x-fragment">#version 300 es
 precision highp float;
@@ -16,16 +16,18 @@ uniform float iTime;
 uniform vec4 iMouse;
 uniform int iFrame;
 out vec4 _pinoOut;
-uniform float P_w0_scale;
-uniform float P_w0_amount;
+uniform float P_w0_cell;
 uniform float P_w1_amount;
-uniform float P_w1_size;
 uniform float P_w2_speed;
+uniform float P_w3_scale;
+uniform float P_w3_amount;
 uniform float P_a_size;
+uniform float P_a_round;
 uniform float P_b_size;
 uniform float P_b_thickness;
 uniform float P_b_soft;
 uniform float P_s_zoom;
+uniform float P_s_arms;
 uniform float P_shift;
 uniform float P_spread;
 uniform float P_glow;
@@ -61,15 +63,15 @@ float fbm(vec3 p, float layers) {
 float smin(float a, float b, float k) { float h = clamp(0.5 + 0.5 * (b - a) / k, 0.0, 1.0); return mix(b, a, h) - k * h * (1.0 - h); }
 
 
-vec3 pal(float x) { return vec3(0.5, 0.5, 0.5) + vec3(0.5, 0.5, 0.5) * cos(6.28318 * (vec3(2.0, 1.0, 0.0) * x * P_spread + vec3(0.5, 0.2, 0.25) + P_shift + PAL_T * 0.04)); }
+vec3 pal(float x) { return vec3(0.2, 0.4, 0.5) + vec3(0.3, 0.3, 0.35) * cos(6.28318 * (vec3(1.0, 1.0, 1.0) * x * P_spread + vec3(0.5, 0.6, 0.7) + P_shift + PAL_T * 0.04)); }
 
 vec3 warp0(vec3 p, float t) {
-  vec3 q = p * P_w0_scale + t * 0.3; p += P_w0_amount * (vec3(noise(q), noise(q + 17.1), noise(q - 9.3)) - 0.5);
+  p = abs(mod(p + 1.5 * P_w0_cell, 2.0 * P_w0_cell) - P_w0_cell) - 0.5 * P_w0_cell;
   return p;
 }
 
 vec3 warp1(vec3 p, float t) {
-  p += P_w1_amount * sin(p.yzx * P_w1_size + t);
+  p.xy = rot(p.z * P_w1_amount) * p.xy;
   return p;
 }
 
@@ -78,8 +80,13 @@ vec3 warp2(vec3 p, float t) {
   return p;
 }
 
+vec3 warp3(vec3 p, float t) {
+  vec3 q = p * P_w3_scale + t * 0.3; p += P_w3_amount * (vec3(noise(q), noise(q + 17.1), noise(q - 9.3)) - 0.5);
+  return p;
+}
+
 float formA(vec3 p) {
-  return length(p) - P_a_size;
+  vec3 q = abs(p) - vec3(P_a_size); return length(max(q, 0.0)) + min(max(q.x, max(q.y, q.z)), 0.0) - P_a_round;
 }
 
 float formB(vec3 p) {
@@ -91,6 +98,7 @@ float field(vec3 p, float t) {
   p = warp0(p, t);
   p = warp1(p, t);
   p = warp2(p, t);
+  p = warp3(p, t);
   float a = formA(p);
   float b = formB(p);
   a = smin(a, b, P_b_soft);
@@ -98,12 +106,16 @@ float field(vec3 p, float t) {
 }
 
 vec3 look(vec2 uv, float t) {
-  vec3 p = vec3(uv * P_s_zoom, 0.0);
+  float r = max(length(uv), 1e-4);
+  // (tiled, so a form recurs all the way in and round: one form at the middle was missed by nearly every pixel)
+  // (and each tile the mirror of the next, so they meet: cut off at the edge of each, his fourth from the engine, p0029,
+  // went up with a hard line out to the right and a ring at every tile)
+  vec3 p = vec3(abs(mod(log(r) * P_s_zoom - t * 0.3 + 2.0, 4.0) - 2.0) - 1.0, abs(mod(atan(uv.y, uv.x) / 3.14159 * floor(P_s_arms) + 2.0, 4.0) - 2.0) - 1.0, 0.0) * 1.5;
   float d = field(p, t);
-  float v = (d * 2.0);
-  vec3 col = pal(v) * smoothstep(0.012 * P_s_zoom, -0.012 * P_s_zoom, d);
-  col += pal(v + 0.15) * P_glow * exp(-abs(d) * 5.0 / P_s_zoom);
-  return col + pal(v + 0.5) * 0.04;
+  float v = (length(uv) * 0.6);
+  vec3 col = pal(v) * smoothstep(0.02, -0.02, d);
+  col += pal(v + 0.15) * P_glow * exp(-abs(d) * 4.0);
+  return (col + pal(v + 0.5) * 0.04) * smoothstep(0.0, 0.15, r);
 }
 
 void mainImage(out vec4 fragColor, in vec2 fragCoord) {
