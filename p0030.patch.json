@@ -1,27 +1,32 @@
 {
   "space": {
-    "part": "flat",
-    "zoom": 3
+    "part": "polar",
+    "zoom": 2.082,
+    "arms": 2.022
   },
   "warps": [
     {
-      "part": "melt",
-      "amount": 0.5,
-      "scale": 1.051
+      "part": "repeat",
+      "cell": 2.5
     },
     {
-      "part": "ripple",
-      "amount": 0.121,
-      "size": 3.264
+      "part": "twist",
+      "amount": 0.4
     },
     {
       "part": "drift",
-      "speed": 1.181
+      "speed": 0.6
+    },
+    {
+      "part": "melt",
+      "amount": 0.8,
+      "scale": 1.2
     }
   ],
   "form": {
-    "part": "sphere",
-    "size": 0.2
+    "part": "box",
+    "size": 0.8,
+    "round": 0.1
   },
   "with": {
     "part": "torus",
@@ -31,18 +36,18 @@
     "soft": 0.44
   },
   "colour": {
-    "palette": "neon",
-    "by": "field",
+    "palette": "sea",
+    "by": "depth",
     "shift": 0.2,
-    "spread": 2.497,
-    "glow": 1.048
+    "spread": 1.5,
+    "glow": 0.3
   },
   "finish": {
     "tone": "filmic",
-    "exposure": 1.029,
-    "grain": 0.019,
-    "vignette": 0.297
+    "exposure": 1,
+    "grain": 0.02,
+    "vignette": 0.3
   },
-  "speed": 0.619,
+  "speed": 0.62,
   "samples": 1
 }
