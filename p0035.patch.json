@@ -1,0 +1,42 @@
+{
+  "space": {
+    "part": "polar",
+    "zoom": 1.864,
+    "arms": 5.806
+  },
+  "warps": [
+    {
+      "part": "melt",
+      "amount": 0.5,
+      "scale": 1.2
+    }
+  ],
+  "form": {
+    "part": "torus",
+    "size": 1,
+    "thickness": 0.3
+  },
+  "with": {
+    "part": "clouds",
+    "join": "add",
+    "scale": 1.5,
+    "layers": 4,
+    "cover": 0.5,
+    "soft": 0.3
+  },
+  "colour": {
+    "palette": "ember",
+    "by": "height",
+    "shift": 0,
+    "spread": 1,
+    "glow": 0.6
+  },
+  "finish": {
+    "tone": "filmic",
+    "exposure": 1,
+    "grain": 0.02,
+    "vignette": 0.3
+  },
+  "speed": 0.4,
+  "samples": 1
+}
