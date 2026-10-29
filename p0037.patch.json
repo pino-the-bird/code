@@ -1,0 +1,39 @@
+{
+  "space": {
+    "part": "polar",
+    "zoom": 2.352,
+    "arms": 4
+  },
+  "warps": [
+    {
+      "part": "drift",
+      "speed": 0.7
+    },
+    {
+      "part": "breathe",
+      "amount": 0.16,
+      "size": 1.25
+    }
+  ],
+  "form": {
+    "part": "clouds",
+    "scale": 1.789,
+    "layers": 3.372,
+    "cover": 0.463
+  },
+  "colour": {
+    "palette": "ember",
+    "by": "field",
+    "shift": 0.057,
+    "spread": 0.989,
+    "glow": 0.6
+  },
+  "finish": {
+    "tone": "filmic",
+    "exposure": 0.959,
+    "grain": 0.02,
+    "vignette": 0.307
+  },
+  "speed": 0.5,
+  "samples": 1
+}
