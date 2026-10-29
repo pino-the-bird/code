@@ -1,38 +1,49 @@
 {
   "space": {
-    "part": "polar",
-    "zoom": 2.352,
-    "arms": 4
+    "part": "cloud",
+    "distance": 3.019,
+    "steps": 24,
+    "density": 1.08
   },
   "warps": [
     {
-      "part": "drift",
-      "speed": 0.7
+      "part": "ripple",
+      "amount": 0.35,
+      "size": 1.8
     },
     {
-      "part": "breathe",
-      "amount": 0.16,
-      "size": 1.25
+      "part": "drift",
+      "speed": 0.6
+    },
+    {
+      "part": "spin",
+      "speed": 0.2
     }
   ],
   "form": {
-    "part": "clouds",
-    "scale": 1.789,
-    "layers": 3.372,
-    "cover": 0.463
+    "part": "lattice",
+    "cell": 1.2,
+    "thickness": 0.07
+  },
+  "with": {
+    "part": "waves",
+    "join": "melt",
+    "size": 1.5,
+    "height": 0.2,
+    "soft": 0.3
   },
   "colour": {
     "palette": "ember",
-    "by": "field",
-    "shift": 0.057,
-    "spread": 0.989,
+    "by": "depth",
+    "shift": 0.1,
+    "spread": 0.8,
     "glow": 0.6
   },
   "finish": {
     "tone": "filmic",
-    "exposure": 0.959,
+    "exposure": 0.95,
     "grain": 0.02,
-    "vignette": 0.307
+    "vignette": 0.3
   },
   "speed": 0.5,
   "samples": 1
