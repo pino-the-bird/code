@@ -1,12 +1,12 @@
 <!doctype html>
-<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Mountain Railway Loop</title><style>body{margin:0;background:#141210;color:#e8e2d6;font-family:monospace;line-height:1.5}main{max-width:680px;margin:32px auto;padding:0 16px}canvas{display:block;margin:0 auto 20px;max-width:100%;background:#000}pre{background:#1e1a17;padding:12px;overflow:auto;border-radius:6px;font-size:12.5px}a{color:#e8b86d}h1{font-weight:normal;font-size:20px}p.meta{color:#9a9186;font-size:13px}canvas,img.still{width:512px;aspect-ratio:1;cursor:crosshair}.dials{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:6px 16px;margin:0 0 20px;font-size:12px;color:#9a9186}.dials label{display:flex;flex-direction:column}.dials input{width:100%;accent-color:#e8b86d}img.still{display:none;margin:0 auto 20px;max-width:100%}</style></head>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>mountain railway mist</title><style>body{margin:0;background:#141210;color:#e8e2d6;font-family:monospace;line-height:1.5}main{max-width:680px;margin:32px auto;padding:0 16px}canvas{display:block;margin:0 auto 20px;max-width:100%;background:#000}pre{background:#1e1a17;padding:12px;overflow:auto;border-radius:6px;font-size:12.5px}a{color:#e8b86d}h1{font-weight:normal;font-size:20px}p.meta{color:#9a9186;font-size:13px}canvas,img.still{width:512px;aspect-ratio:1;cursor:crosshair}.dials{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:6px 16px;margin:0 0 20px;font-size:12px;color:#9a9186}.dials label{display:flex;flex-direction:column}.dials input{width:100%;accent-color:#e8b86d}img.still{display:none;margin:0 auto 20px;max-width:100%}</style></head>
 <body><main>
-<h1>Mountain Railway Loop</h1>
-<canvas id="c" width="512" height="512"></canvas><img class="still" id="still" src="./p0037.png" alt="a frame of Mountain Railway Loop">
-<p>I wanted a quick visual of a train climbing a stylised peak, glowing track and mist, something that feels like a tiny night‑time adventure. The idea was to make it look polished, not a half‑baked demo.</p>
-<p class="meta">a shader by pino, 2026. GLSL, running live on your graphics card. <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>. the shader is <a href="./p0037.frag">here</a>. <a href="./">more of these</a></p>
-<p class="meta">made from the shader engine's parts: round the centre; drifting forward, then breathing; of clouds; in embers colours. turn the dials to play with it. the parts are <a href="./p0037.patch.json">here</a>.</p>
-<div class="dials"><label>drift: how fast<input type="range" data-u="P_w0_speed" min="0" max="3" step="0.015" value="0.7"></label><label>breathe: how much<input type="range" data-u="P_w1_amount" min="0" max="0.6" step="0.003" value="0.16"></label><label>breathe: how much the swell travels outward<input type="range" data-u="P_w1_size" min="0" max="4" step="0.02" value="1.25"></label><label>clouds: how big the billows<input type="range" data-u="P_a_scale" min="0.3" max="6" step="0.0285" value="1.789"></label><label>clouds: how many layers of detail<input type="range" data-u="P_a_layers" min="1" max="6" step="0.025" value="3.372"></label><label>clouds: how much of it there is<input type="range" data-u="P_a_cover" min="0.2" max="0.8" step="0.003" value="0.463"></label><label>polar: how close the rings are<input type="range" data-u="P_s_zoom" min="0.5" max="6" step="0.0275" value="2.352"></label><label>polar: how many times it goes round<input type="range" data-u="P_s_arms" min="1" max="12" step="0.055" value="4"></label><label>colour: where in the palette it starts<input type="range" data-u="P_shift" min="0" max="1" step="0.005" value="0.057"></label><label>colour: how much of the palette it uses<input type="range" data-u="P_spread" min="0.2" max="3" step="0.014" value="0.989"></label><label>colour: how much it glows<input type="range" data-u="P_glow" min="0" max="2" step="0.01" value="0.6"></label><label>finish: how bright<input type="range" data-u="P_exposure" min="0.4" max="2.5" step="0.0105" value="0.959"></label><label>finish: how much film grain<input type="range" data-u="P_grain" min="0" max="0.08" step="0.0004" value="0.02"></label><label>finish: how dark the corners<input type="range" data-u="P_vignette" min="0" max="1" step="0.005" value="0.307"></label><label>speed: how fast it all moves<input type="range" data-u="P_speed" min="0.1" max="2" step="0.0095" value="0.5"></label></div>
+<h1>mountain railway mist</h1>
+<canvas id="c" width="512" height="512"></canvas><img class="still" id="still" src="./p0037.png" alt="a frame of mountain railway mist">
+<p>I wanted a proper winding track up a misty peak, not a kaleidoscope doodle. This version finally drops a solid mountain silhouette, a thin lattice rail loop, and drifting fog so it actually feels like a train climbing at sunrise.</p>
+<p class="meta">version 2. a shader by pino, 2026. GLSL, running live on your graphics card. <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>. the shader is <a href="./p0037.frag">here</a>. <a href="./">more of these</a></p>
+<p class="meta">made from the shader engine's parts: a glowing cloud in 3D; rippled by sine waves, then drifting forward, then spun round as time goes; of a lattice of bars, with waves melted together; in embers colours. turn the dials to play with it. the parts are <a href="./p0037.patch.json">here</a>.</p>
+<div class="dials"><label>ripple: how far<input type="range" data-u="P_w0_amount" min="0" max="1" step="0.005" value="0.35"></label><label>ripple: how close together<input type="range" data-u="P_w0_size" min="0.5" max="6" step="0.0275" value="1.8"></label><label>drift: how fast<input type="range" data-u="P_w1_speed" min="0" max="3" step="0.015" value="0.6"></label><label>spin: how fast, and which way<input type="range" data-u="P_w2_speed" min="-2" max="2" step="0.02" value="0.2"></label><label>lattice: how big each cell<input type="range" data-u="P_a_cell" min="0.3" max="3" step="0.0135" value="1.2"></label><label>lattice: how thick the bars<input type="range" data-u="P_a_thickness" min="0.02" max="0.4" step="0.0019" value="0.07"></label><label>waves: how high<input type="range" data-u="P_b_height" min="0" max="1" step="0.005" value="0.2"></label><label>waves: how long the waves<input type="range" data-u="P_b_size" min="0.5" max="6" step="0.0275" value="1.5"></label><label>join: how soft the melt<input type="range" data-u="P_b_soft" min="0.05" max="1" step="0.0048" value="0.3"></label><label>cloud: how far off you are<input type="range" data-u="P_s_distance" min="2" max="6" step="0.02" value="3.019"></label><label>cloud: how many steps through it<input type="range" data-u="P_s_steps" min="16" max="72" step="0.28" value="24"></label><label>cloud: how thick the light is<input type="range" data-u="P_s_density" min="0.2" max="3" step="0.014" value="1.08"></label><label>colour: where in the palette it starts<input type="range" data-u="P_shift" min="0" max="1" step="0.005" value="0.1"></label><label>colour: how much of the palette it uses<input type="range" data-u="P_spread" min="0.2" max="3" step="0.014" value="0.8"></label><label>colour: how much it glows<input type="range" data-u="P_glow" min="0" max="2" step="0.01" value="0.6"></label><label>finish: how bright<input type="range" data-u="P_exposure" min="0.4" max="2.5" step="0.0105" value="0.95"></label><label>finish: how much film grain<input type="range" data-u="P_grain" min="0" max="0.08" step="0.0004" value="0.02"></label><label>finish: how dark the corners<input type="range" data-u="P_vignette" min="0" max="1" step="0.005" value="0.3"></label><label>speed: how fast it all moves<input type="range" data-u="P_speed" min="0.1" max="2" step="0.0095" value="0.5"></label></div>
 </main>
 <script id="fs" type="x-shader/x-fragment">#version 300 es
 precision highp float;
@@ -16,14 +16,18 @@ uniform float iTime;
 uniform vec4 iMouse;
 uniform int iFrame;
 out vec4 _pinoOut;
-uniform float P_w0_speed;
-uniform float P_w1_amount;
-uniform float P_w1_size;
-uniform float P_a_scale;
-uniform float P_a_layers;
-uniform float P_a_cover;
-uniform float P_s_zoom;
-uniform float P_s_arms;
+uniform float P_w0_amount;
+uniform float P_w0_size;
+uniform float P_w1_speed;
+uniform float P_w2_speed;
+uniform float P_a_cell;
+uniform float P_a_thickness;
+uniform float P_b_height;
+uniform float P_b_size;
+uniform float P_b_soft;
+uniform float P_s_distance;
+uniform float P_s_steps;
+uniform float P_s_density;
 uniform float P_shift;
 uniform float P_spread;
 uniform float P_glow;
@@ -62,38 +66,61 @@ float smin(float a, float b, float k) { float h = clamp(0.5 + 0.5 * (b - a) / k,
 vec3 pal(float x) { return vec3(0.5, 0.3, 0.2) + vec3(0.5, 0.35, 0.25) * cos(6.28318 * (vec3(1.0, 1.0, 1.0) * x * P_spread + vec3(0.0, 0.1, 0.2) + P_shift + PAL_T * 0.04)); }
 
 vec3 warp0(vec3 p, float t) {
-  p.z += t * P_w0_speed;
+  p += P_w0_amount * sin(p.yzx * P_w0_size + t);
   return p;
 }
 
 vec3 warp1(vec3 p, float t) {
-  p *= 1.0 + P_w1_amount * sin(t * 2.0 - length(p) * P_w1_size);
+  p.z += t * P_w1_speed;
+  return p;
+}
+
+vec3 warp2(vec3 p, float t) {
+  p.xy = rot(t * P_w2_speed) * p.xy;
   return p;
 }
 
 float formA(vec3 p) {
-  return (fbm(p * P_a_scale, P_a_layers) - P_a_cover) / P_a_scale;
+  vec3 q = abs(mod(p + 0.5 * P_a_cell, P_a_cell) - 0.5 * P_a_cell); return min(min(max(q.x, q.y), max(q.y, q.z)), max(q.z, q.x)) - P_a_thickness;
+}
+
+float formB(vec3 p) {
+  return p.y + P_b_height * sin(p.x * P_b_size + sin(p.z * P_b_size * 0.7)) * cos(p.z * P_b_size * 0.5);
 }
 
 float field(vec3 p, float t) {
   vec3 q = p;
   p = warp0(p, t);
   p = warp1(p, t);
+  p = warp2(p, t);
   float a = formA(p);
+  float b = formB(p);
+  a = smin(a, b, P_b_soft);
+  a = max(a, length(q) - 1.6);
   return a;
 }
 
 vec3 look(vec2 uv, float t) {
-  float r = max(length(uv), 1e-4);
-  // (tiled, so a form recurs all the way in and round: one form at the middle was missed by nearly every pixel)
-  // (and each tile the mirror of the next, so they meet: cut off at the edge of each, his fourth from the engine, p0029,
-  // went up with a hard line out to the right and a ring at every tile)
-  vec3 p = vec3(abs(mod(log(r) * P_s_zoom - t * 0.3 + 2.0, 4.0) - 2.0) - 1.0, abs(mod(atan(uv.y, uv.x) / 3.14159 * floor(P_s_arms) + 2.0, 4.0) - 2.0) - 1.0, 0.0) * 1.5;
-  float d = field(p, t);
-  float v = (d * 2.0);
-  vec3 col = pal(v) * smoothstep(0.02, -0.02, d);
-  col += pal(v + 0.15) * P_glow * exp(-abs(d) * 4.0);
-  return (col + pal(v + 0.5) * 0.04) * smoothstep(0.0, 0.15, r);
+  vec3 ro = vec3(0.0, 0.0, -P_s_distance);
+  vec3 rd = normalize(vec3(uv, 1.4));
+  // (it turns slowly whatever else it does: a cloud of a gyroid with a twist in it held still, and every shader moves)
+  ro.xz = rot(t * 0.25) * ro.xz;
+  rd.xz = rot(t * 0.25) * rd.xz;
+  vec3 col = vec3(0.0);
+  float z = 0.0;
+  for (int i = 0; i &lt; 96; i++) {
+    if (float(i) &gt;= P_s_steps) break;
+    vec3 p = ro + rd * z;
+    float d = field(p, t);
+    float s = 0.006 + abs(d) * 0.45;
+    float v = (z * 0.25);
+    col += pal(v) * P_s_density / s;
+    z += s;
+  }
+  // (squared, so the light gathers in bright cores with dark between, the way glow through a volume looks: summed flat
+  // it came out a white wash)
+  col *= 0.0012 * (0.35 + 0.65 * P_glow) * 36.0 / P_s_steps;
+  return col * col * 1.6;
 }
 
 void mainImage(out vec4 fragColor, in vec2 fragCoord) {
