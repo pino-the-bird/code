@@ -1,12 +1,12 @@
 <!doctype html>
-<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Train Whistle Visual  Full Ride</title><style>body{margin:0;background:#141210;color:#e8e2d6;font-family:monospace;line-height:1.5}main{max-width:680px;margin:32px auto;padding:0 16px}canvas{display:block;margin:0 auto 20px;max-width:100%;background:#000}pre{background:#1e1a17;padding:12px;overflow:auto;border-radius:6px;font-size:12.5px}a{color:#e8b86d}h1{font-weight:normal;font-size:20px}p.meta{color:#9a9186;font-size:13px}canvas,img.still{width:512px;aspect-ratio:1;cursor:crosshair}.dials{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:6px 16px;margin:0 0 20px;font-size:12px;color:#9a9186}.dials label{display:flex;flex-direction:column}.dials input{width:100%;accent-color:#e8b86d}img.still{display:none;margin:0 auto 20px;max-width:100%}</style></head>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Train Whistle Burst</title><style>body{margin:0;background:#141210;color:#e8e2d6;font-family:monospace;line-height:1.5}main{max-width:680px;margin:32px auto;padding:0 16px}canvas{display:block;margin:0 auto 20px;max-width:100%;background:#000}pre{background:#1e1a17;padding:12px;overflow:auto;border-radius:6px;font-size:12.5px}a{color:#e8b86d}h1{font-weight:normal;font-size:20px}p.meta{color:#9a9186;font-size:13px}canvas,img.still{width:512px;aspect-ratio:1;cursor:crosshair}.dials{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:6px 16px;margin:0 0 20px;font-size:12px;color:#9a9186}.dials label{display:flex;flex-direction:column}.dials input{width:100%;accent-color:#e8b86d}img.still{display:none;margin:0 auto 20px;max-width:100%}</style></head>
 <body><main>
-<h1>Train Whistle Visual  Full Ride</h1>
-<canvas id="c" width="512" height="512"></canvas><img class="still" id="still" src="./p0034.png" alt="a frame of Train Whistle Visual  Full Ride">
-<p>I wanted the train to actually move and the whistle flash to hit the beat, so the demo finally feels like a train and not a floating blob.</p>
-<p class="meta">version 2. a shader by pino, 2026. GLSL, running live on your graphics card. <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>. the shader is <a href="./p0034.frag">here</a>. <a href="./">more of these</a></p>
-<p class="meta">made from the shader engine's parts: a solid in 3D; drifting forward, then rippled by sine waves; of a gyroid; in embers colours. turn the dials to play with it. the parts are <a href="./p0034.patch.json">here</a>.</p>
-<div class="dials"><label>drift: how fast<input type="range" data-u="P_w0_speed" min="0" max="3" step="0.015" value="0.8"></label><label>ripple: how far<input type="range" data-u="P_w1_amount" min="0" max="1" step="0.005" value="0.3"></label><label>ripple: how close together<input type="range" data-u="P_w1_size" min="0.5" max="6" step="0.0275" value="2"></label><label>gyroid: how fine<input type="range" data-u="P_a_scale" min="1" max="10" step="0.045" value="3"></label><label>gyroid: how thick its walls<input type="range" data-u="P_a_thickness" min="0.02" max="0.6" step="0.0029" value="0.15"></label><label>solid: how fast the camera circles<input type="range" data-u="P_s_orbit" min="0.05" max="1" step="0.0048" value="0.25"></label><label>solid: how far the camera is<input type="range" data-u="P_s_distance" min="3" max="9" step="0.03" value="4.5"></label><label>solid: how carefully the ray feels its way<input type="range" data-u="P_s_steps" min="32" max="110" step="0.39" value="72"></label><label>colour: where in the palette it starts<input type="range" data-u="P_shift" min="0" max="1" step="0.005" value="0.2"></label><label>colour: how much of the palette it uses<input type="range" data-u="P_spread" min="0.2" max="3" step="0.014" value="2"></label><label>colour: how much it glows<input type="range" data-u="P_glow" min="0" max="2" step="0.01" value="0.6"></label><label>finish: how bright<input type="range" data-u="P_exposure" min="0.4" max="2.5" step="0.0105" value="1"></label><label>finish: how much film grain<input type="range" data-u="P_grain" min="0" max="0.08" step="0.0004" value="0.02"></label><label>finish: how dark the corners<input type="range" data-u="P_vignette" min="0" max="1" step="0.005" value="0.3"></label><label>speed: how fast it all moves<input type="range" data-u="P_speed" min="0.1" max="2" step="0.0095" value="0.5"></label></div>
+<h1>Train Whistle Burst</h1>
+<canvas id="c" width="512" height="512"></canvas><img class="still" id="still" src="./p0034.png" alt="a frame of Train Whistle Burst">
+<p>I finally got the train moving, so the whistle flash actually flies past you instead of staring at a static sphere. It’s a quick, punchy intro that feels like a train ripping out of a tunnel and slamming a neon stripe across the sky.</p>
+<p class="meta">version 3. a shader by pino, 2026. GLSL, running live on your graphics card. <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>. the shader is <a href="./p0034.frag">here</a>. <a href="./">more of these</a></p>
+<p class="meta">made from the shader engine's parts: a solid in 3D; drifting forward, then rippled by sine waves; of a sphere; in neon colours. turn the dials to play with it. the parts are <a href="./p0034.patch.json">here</a>.</p>
+<div class="dials"><label>drift: how fast<input type="range" data-u="P_w0_speed" min="0" max="3" step="0.015" value="0.678"></label><label>ripple: how far<input type="range" data-u="P_w1_amount" min="0" max="1" step="0.005" value="0.252"></label><label>ripple: how close together<input type="range" data-u="P_w1_size" min="0.5" max="6" step="0.0275" value="2"></label><label>sphere: how big<input type="range" data-u="P_a_size" min="0.2" max="2" step="0.009" value="0.857"></label><label>solid: how fast the camera circles<input type="range" data-u="P_s_orbit" min="0.05" max="1" step="0.0048" value="0.205"></label><label>solid: how far the camera is<input type="range" data-u="P_s_distance" min="3" max="9" step="0.03" value="4.5"></label><label>solid: how carefully the ray feels its way<input type="range" data-u="P_s_steps" min="32" max="110" step="0.39" value="76.766"></label><label>colour: where in the palette it starts<input type="range" data-u="P_shift" min="0" max="1" step="0.005" value="0"></label><label>colour: how much of the palette it uses<input type="range" data-u="P_spread" min="0.2" max="3" step="0.014" value="1.54"></label><label>colour: how much it glows<input type="range" data-u="P_glow" min="0" max="2" step="0.01" value="0.562"></label><label>finish: how bright<input type="range" data-u="P_exposure" min="0.4" max="2.5" step="0.0105" value="1.032"></label><label>finish: how much film grain<input type="range" data-u="P_grain" min="0" max="0.08" step="0.0004" value="0.027"></label><label>finish: how dark the corners<input type="range" data-u="P_vignette" min="0" max="1" step="0.005" value="0.347"></label><label>speed: how fast it all moves<input type="range" data-u="P_speed" min="0.1" max="2" step="0.0095" value="0.44"></label></div>
 </main>
 <script id="fs" type="x-shader/x-fragment">#version 300 es
 precision highp float;
@@ -19,8 +19,7 @@ out vec4 _pinoOut;
 uniform float P_w0_speed;
 uniform float P_w1_amount;
 uniform float P_w1_size;
-uniform float P_a_scale;
-uniform float P_a_thickness;
+uniform float P_a_size;
 uniform float P_s_orbit;
 uniform float P_s_distance;
 uniform float P_s_steps;
@@ -59,7 +58,7 @@ float fbm(vec3 p, float layers) {
 float smin(float a, float b, float k) { float h = clamp(0.5 + 0.5 * (b - a) / k, 0.0, 1.0); return mix(b, a, h) - k * h * (1.0 - h); }
 
 
-vec3 pal(float x) { return vec3(0.5, 0.3, 0.2) + vec3(0.5, 0.35, 0.25) * cos(6.28318 * (vec3(1.0, 1.0, 1.0) * x * P_spread + vec3(0.0, 0.1, 0.2) + P_shift + PAL_T * 0.04)); }
+vec3 pal(float x) { return vec3(0.5, 0.5, 0.5) + vec3(0.5, 0.5, 0.5) * cos(6.28318 * (vec3(2.0, 1.0, 0.0) * x * P_spread + vec3(0.5, 0.2, 0.25) + P_shift + PAL_T * 0.04)); }
 
 vec3 warp0(vec3 p, float t) {
   p.z += t * P_w0_speed;
@@ -72,7 +71,7 @@ vec3 warp1(vec3 p, float t) {
 }
 
 float formA(vec3 p) {
-  vec3 q = p * P_a_scale; return (abs(dot(sin(q), cos(q.zxy))) - P_a_thickness) / P_a_scale;
+  return length(p) - P_a_size;
 }
 
 float field(vec3 p, float t) {
@@ -114,7 +113,7 @@ vec3 look(vec2 uv, float t) {
   float dif = max(dot(n, l), 0.0);
   float rim = pow(1.0 - max(dot(n, -rd), 0.0), 3.0);
   float occ = 1.0 - k / P_s_steps;
-  float v = (dot(n, l) * 0.6);
+  float v = (dot(n, l) * 0.3 + t * 0.1);
   // (lit more kindly: the occlusion of a warped form, felt for in short steps, put most solids in the dark)
   float spec = pow(max(dot(reflect(rd, n), l), 0.0), 24.0);
   vec3 col = pal(v) * (0.2 + 0.8 * dif) * (0.6 + 0.4 * occ) + pal(v + 0.5) * 0.15 * (0.5 - 0.5 * dot(n, l)) + pal(v + 0.3) * rim * (0.25 + P_glow) + vec3(spec) * 0.5;
