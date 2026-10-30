@@ -1,24 +1,23 @@
-// Train Whistle Visual  Full Ride
+// Train Whistle Burst
 // SPDX-License-Identifier: CC-BY-NC-SA-4.0
 // Copyright (c) 2026 pino (https://pino-the-bird.github.io/code/p0034.html)
 // https://creativecommons.org/licenses/by-nc-sa/4.0/
 // uniforms: vec3 iResolution, float iTime, vec4 iMouse, int iFrame
 
-const float P_w0_speed = 0.8;
-const float P_w1_amount = 0.3;
+const float P_w0_speed = 0.678;
+const float P_w1_amount = 0.252;
 const float P_w1_size = 2.0;
-const float P_a_scale = 3.0;
-const float P_a_thickness = 0.15;
-const float P_s_orbit = 0.25;
+const float P_a_size = 0.857;
+const float P_s_orbit = 0.205;
 const float P_s_distance = 4.5;
-const float P_s_steps = 72.0;
-const float P_shift = 0.2;
-const float P_spread = 2.0;
-const float P_glow = 0.6;
-const float P_exposure = 1.0;
-const float P_grain = 0.02;
-const float P_vignette = 0.3;
-const float P_speed = 0.5;
+const float P_s_steps = 76.766;
+const float P_shift = 0.0;
+const float P_spread = 1.54;
+const float P_glow = 0.562;
+const float P_exposure = 1.032;
+const float P_grain = 0.027;
+const float P_vignette = 0.347;
+const float P_speed = 0.44;
 
 float PAL_T = 0.0;
 
@@ -47,7 +46,7 @@ float fbm(vec3 p, float layers) {
 float smin(float a, float b, float k) { float h = clamp(0.5 + 0.5 * (b - a) / k, 0.0, 1.0); return mix(b, a, h) - k * h * (1.0 - h); }
 
 
-vec3 pal(float x) { return vec3(0.5, 0.3, 0.2) + vec3(0.5, 0.35, 0.25) * cos(6.28318 * (vec3(1.0, 1.0, 1.0) * x * P_spread + vec3(0.0, 0.1, 0.2) + P_shift + PAL_T * 0.04)); }
+vec3 pal(float x) { return vec3(0.5, 0.5, 0.5) + vec3(0.5, 0.5, 0.5) * cos(6.28318 * (vec3(2.0, 1.0, 0.0) * x * P_spread + vec3(0.5, 0.2, 0.25) + P_shift + PAL_T * 0.04)); }
 
 vec3 warp0(vec3 p, float t) {
   p.z += t * P_w0_speed;
@@ -60,7 +59,7 @@ vec3 warp1(vec3 p, float t) {
 }
 
 float formA(vec3 p) {
-  vec3 q = p * P_a_scale; return (abs(dot(sin(q), cos(q.zxy))) - P_a_thickness) / P_a_scale;
+  return length(p) - P_a_size;
 }
 
 float field(vec3 p, float t) {
@@ -102,7 +101,7 @@ vec3 look(vec2 uv, float t) {
   float dif = max(dot(n, l), 0.0);
   float rim = pow(1.0 - max(dot(n, -rd), 0.0), 3.0);
   float occ = 1.0 - k / P_s_steps;
-  float v = (dot(n, l) * 0.6);
+  float v = (dot(n, l) * 0.3 + t * 0.1);
   // (lit more kindly: the occlusion of a warped form, felt for in short steps, put most solids in the dark)
   float spec = pow(max(dot(reflect(rd, n), l), 0.0), 24.0);
   vec3 col = pal(v) * (0.2 + 0.8 * dif) * (0.6 + 0.4 * occ) + pal(v + 0.5) * 0.15 * (0.5 - 0.5 * dot(n, l)) + pal(v + 0.3) * rim * (0.25 + P_glow) + vec3(spec) * 0.5;
