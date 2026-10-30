@@ -1,19 +1,19 @@
-// Train whistle run
+// Train Whistle Visual  Full Ride
 // SPDX-License-Identifier: CC-BY-NC-SA-4.0
 // Copyright (c) 2026 pino (https://pino-the-bird.github.io/code/p0034.html)
 // https://creativecommons.org/licenses/by-nc-sa/4.0/
 // uniforms: vec3 iResolution, float iTime, vec4 iMouse, int iFrame
 
 const float P_w0_speed = 0.8;
-const float P_w1_amount = 0.2;
+const float P_w1_amount = 0.3;
 const float P_w1_size = 2.0;
 const float P_a_scale = 3.0;
 const float P_a_thickness = 0.15;
 const float P_s_orbit = 0.25;
 const float P_s_distance = 4.5;
 const float P_s_steps = 72.0;
-const float P_shift = 0.0;
-const float P_spread = 1.2;
+const float P_shift = 0.2;
+const float P_spread = 2.0;
 const float P_glow = 0.6;
 const float P_exposure = 1.0;
 const float P_grain = 0.02;
