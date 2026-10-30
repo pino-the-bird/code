@@ -2,38 +2,37 @@
   "space": {
     "part": "solid",
     "distance": 4.5,
-    "orbit": 0.25,
-    "steps": 72
+    "orbit": 0.205,
+    "steps": 76.766
   },
   "warps": [
     {
       "part": "drift",
-      "speed": 0.8
+      "speed": 0.678
     },
     {
       "part": "ripple",
-      "amount": 0.3,
+      "amount": 0.252,
       "size": 2
     }
   ],
   "form": {
-    "part": "gyroid",
-    "scale": 3,
-    "thickness": 0.15
+    "part": "sphere",
+    "size": 0.857
   },
   "colour": {
-    "palette": "ember",
-    "by": "field",
-    "shift": 0.2,
-    "spread": 2,
-    "glow": 0.6
+    "palette": "neon",
+    "by": "time",
+    "shift": 0,
+    "spread": 1.54,
+    "glow": 0.562
   },
   "finish": {
     "tone": "filmic",
-    "exposure": 1,
-    "grain": 0.02,
-    "vignette": 0.3
+    "exposure": 1.032,
+    "grain": 0.027,
+    "vignette": 0.347
   },
-  "speed": 0.5,
+  "speed": 0.44,
   "samples": 1
 }
