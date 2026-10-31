@@ -1,37 +1,48 @@
 {
   "space": {
     "part": "solid",
-    "distance": 4.5,
-    "orbit": 0.205,
-    "steps": 76.766
+    "distance": 4.442,
+    "orbit": 0.311,
+    "steps": 33
   },
   "warps": [
     {
       "part": "drift",
-      "speed": 0.678
+      "speed": 0.615
+    },
+    {
+      "part": "repeat",
+      "cell": 2.831
     },
     {
       "part": "ripple",
-      "amount": 0.252,
+      "amount": 0.313,
       "size": 2
+    },
+    {
+      "part": "turbulence",
+      "amount": 0.445,
+      "layers": 2,
+      "size": 1.5
     }
   ],
   "form": {
-    "part": "sphere",
-    "size": 0.857
+    "part": "weave",
+    "scale": 3.306,
+    "cover": 0.241
   },
   "colour": {
     "palette": "neon",
     "by": "time",
     "shift": 0,
-    "spread": 1.54,
-    "glow": 0.562
+    "spread": 1.886,
+    "glow": 0.726
   },
   "finish": {
     "tone": "filmic",
-    "exposure": 1.032,
-    "grain": 0.027,
-    "vignette": 0.347
+    "exposure": 0.9,
+    "grain": 0.03,
+    "vignette": 0.35
   },
   "speed": 0.44,
   "samples": 1
