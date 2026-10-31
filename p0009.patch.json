@@ -1,0 +1,45 @@
+{
+  "space": {
+    "part": "cloud",
+    "distance": 3.318,
+    "steps": 41.371,
+    "density": 1.214
+  },
+  "warps": [
+    {
+      "part": "twist",
+      "amount": 1.015
+    },
+    {
+      "part": "drift",
+      "speed": 0.669
+    }
+  ],
+  "form": {
+    "part": "box",
+    "size": 0.9,
+    "round": 0.1
+  },
+  "with": {
+    "part": "box",
+    "join": "add",
+    "size": 0.9,
+    "round": 0.1,
+    "soft": 0.331
+  },
+  "colour": {
+    "palette": "moss",
+    "by": "height",
+    "shift": 0.2,
+    "spread": 2,
+    "glow": 0.8
+  },
+  "finish": {
+    "tone": "filmic",
+    "exposure": 1,
+    "grain": 0.025,
+    "vignette": 0.3
+  },
+  "speed": 0.2,
+  "samples": 1
+}
