@@ -1,0 +1,142 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>DISK 04 MODE7</title><style>body{margin:0;background:#141210;color:#e8e2d6;font-family:monospace;line-height:1.5}main{max-width:680px;margin:32px auto;padding:0 16px}canvas{display:block;margin:0 auto 20px;max-width:100%;background:#000}pre{background:#1e1a17;padding:12px;overflow:auto;border-radius:6px;font-size:12.5px}a{color:#e8b86d}h1{font-weight:normal;font-size:20px}p.meta{color:#9a9186;font-size:13px}</style></head>
+<body><main>
+<h1>DISK 04 / MODE7</h1>
+<canvas id="c" width="512" height="512"></canvas>
+<p>a racetrack seen from just above it, turning as you drive round: one flat picture of a track, and every line of the screen below the horizon a slice of it, nearer and bigger the lower it is. it is how the Super Nintendo did its racing and flying games with no 3D at all</p>
+<p class="meta">a floppy disk out of the vending machine, run by pino on the computer at the internet cafe, with lower down. Mode 7, the Super Nintendo's background mode (Nintendo, 1990); written again for the cafe.</p>
+<pre>function setup(ctx, W, H) {
+var k = { cam: 10, speed: 0.006, dusk: 0 }
+Object.assign(k, {"cam":6})
+var n = 256, tex = new Uint8Array(n * n * 3)
+for (var y = 0; y &lt; n; y++) {
+  for (var x = 0; x &lt; n; x++) {
+    var dx = x - 128, dy = y - 128, r = Math.sqrt(dx * dx + dy * dy)
+    var col
+    if (r &gt; 70 &amp;&amp; r &lt; 96) {
+      col = [70, 70, 76]
+      if (Math.abs(r - 83) &lt; 1 &amp;&amp; Math.floor(Math.atan2(dy, dx) * 12) % 2) col = [230, 230, 220]
+      if (Math.abs(dy) &lt; 3 &amp;&amp; dx &gt; 70) col = (Math.floor(x / 3) + Math.floor(y / 3)) % 2 ? [250, 250, 250] : [20, 20, 20]
+    } else if ((r &gt; 66 &amp;&amp; r &lt;= 70) || (r &gt;= 96 &amp;&amp; r &lt; 100)) {
+      col = Math.floor(Math.atan2(dy, dx) * 30) % 2 ? [220, 40, 40] : [240, 240, 240]
+    } else {
+      col = (Math.floor(x / 16) + Math.floor(y / 16)) % 2 ? [60, 150, 60] : [50, 135, 52]
+    }
+    var i = (y * n + x) * 3
+    tex[i] = col[0]; tex[i + 1] = col[1]; tex[i + 2] = col[2]
+  }
+}
+var w = 200, h = 150
+var c = document.createElement('canvas')
+c.width = w
+c.height = h
+var cx = c.getContext('2d')
+return { k: k, n: n, tex: tex, w: w, h: h, c: c, cx: cx, img: cx.createImageData(w, h), ang: 0 }
+}
+function update(state, t, W, H) {
+state.ang += state.k.speed
+}
+function render(ctx, state, t, W, H) {
+var k = state.k, w = state.w, h = state.h, n = state.n, tex = state.tex, d = state.img.data
+var horizon = 46
+var a = state.ang
+var px = 128 + Math.cos(a) * 83, py = 128 + Math.sin(a) * 83
+var head = a + Math.PI / 2
+var fx = Math.cos(head), fy = Math.sin(head), sx = -fy, sy = fx
+for (var y = 0; y &lt; h; y++) {
+  for (var x = 0; x &lt; w; x++) {
+    var i = (y * w + x) * 4
+    if (y &lt;= horizon) {
+      var g = y / horizon
+      d[i] = k.dusk ? 40 + 160 * g : 90 + 90 * g; d[i + 1] = k.dusk ? 20 + 80 * g : 140 + 70 * g; d[i + 2] = k.dusk ? 70 + 40 * g : 220; d[i + 3] = 255
+      continue
+    }
+    var z = k.cam * 30 / (y - horizon)
+    var side = (x - w / 2) / w * z * 1.2
+    var u = Math.floor(px + fx * z + sx * side) &amp; (n - 1)
+    var v = Math.floor(py + fy * z + sy * side) &amp; (n - 1)
+    var j = (v * n + u) * 3
+    var fog = Math.max(0.35, 1 - z / 180)
+    d[i] = tex[j] * fog; d[i + 1] = tex[j + 1] * fog; d[i + 2] = tex[j + 2] * fog; d[i + 3] = 255
+  }
+}
+state.cx.putImageData(state.img, 0, 0)
+ctx.imageSmoothingEnabled = false
+ctx.drawImage(state.c, 0, 0, W, H)
+}</pre>
+<p class="meta"><a href="./">more of these</a></p>
+</main>
+<script>
+(function () {
+  var canvas = document.getElementById('c'), ctx = canvas.getContext('2d'), W = canvas.width, H = canvas.height
+  function setup(ctx, W, H) {
+{
+var k = { cam: 10, speed: 0.006, dusk: 0 }
+Object.assign(k, {"cam":6})
+var n = 256, tex = new Uint8Array(n * n * 3)
+for (var y = 0; y < n; y++) {
+  for (var x = 0; x < n; x++) {
+    var dx = x - 128, dy = y - 128, r = Math.sqrt(dx * dx + dy * dy)
+    var col
+    if (r > 70 && r < 96) {
+      col = [70, 70, 76]
+      if (Math.abs(r - 83) < 1 && Math.floor(Math.atan2(dy, dx) * 12) % 2) col = [230, 230, 220]
+      if (Math.abs(dy) < 3 && dx > 70) col = (Math.floor(x / 3) + Math.floor(y / 3)) % 2 ? [250, 250, 250] : [20, 20, 20]
+    } else if ((r > 66 && r <= 70) || (r >= 96 && r < 100)) {
+      col = Math.floor(Math.atan2(dy, dx) * 30) % 2 ? [220, 40, 40] : [240, 240, 240]
+    } else {
+      col = (Math.floor(x / 16) + Math.floor(y / 16)) % 2 ? [60, 150, 60] : [50, 135, 52]
+    }
+    var i = (y * n + x) * 3
+    tex[i] = col[0]; tex[i + 1] = col[1]; tex[i + 2] = col[2]
+  }
+}
+var w = 200, h = 150
+var c = document.createElement('canvas')
+c.width = w
+c.height = h
+var cx = c.getContext('2d')
+return { k: k, n: n, tex: tex, w: w, h: h, c: c, cx: cx, img: cx.createImageData(w, h), ang: 0 }
+}
+  }
+  function update(state, t, W, H) {
+{
+state.ang += state.k.speed
+}
+  }
+  function render(ctx, state, t, W, H) {
+{
+var k = state.k, w = state.w, h = state.h, n = state.n, tex = state.tex, d = state.img.data
+var horizon = 46
+var a = state.ang
+var px = 128 + Math.cos(a) * 83, py = 128 + Math.sin(a) * 83
+var head = a + Math.PI / 2
+var fx = Math.cos(head), fy = Math.sin(head), sx = -fy, sy = fx
+for (var y = 0; y < h; y++) {
+  for (var x = 0; x < w; x++) {
+    var i = (y * w + x) * 4
+    if (y <= horizon) {
+      var g = y / horizon
+      d[i] = k.dusk ? 40 + 160 * g : 90 + 90 * g; d[i + 1] = k.dusk ? 20 + 80 * g : 140 + 70 * g; d[i + 2] = k.dusk ? 70 + 40 * g : 220; d[i + 3] = 255
+      continue
+    }
+    var z = k.cam * 30 / (y - horizon)
+    var side = (x - w / 2) / w * z * 1.2
+    var u = Math.floor(px + fx * z + sx * side) & (n - 1)
+    var v = Math.floor(py + fy * z + sy * side) & (n - 1)
+    var j = (v * n + u) * 3
+    var fog = Math.max(0.35, 1 - z / 180)
+    d[i] = tex[j] * fog; d[i + 1] = tex[j + 1] * fog; d[i + 2] = tex[j + 2] * fog; d[i + 3] = 255
+  }
+}
+state.cx.putImageData(state.img, 0, 0)
+ctx.imageSmoothingEnabled = false
+ctx.drawImage(state.c, 0, 0, W, H)
+}
+  }
+  var state = setup(ctx, W, H) || {}, t = 0
+  var steps = Math.max(1, Math.min(32, (state.steps | 0) || 1))
+  function frame() { for (var i = 0; i < steps; i++) update(state, t, W, H); render(ctx, state, t, W, H); t++; requestAnimationFrame(frame) }
+  frame()
+})()
+</script></body></html>
