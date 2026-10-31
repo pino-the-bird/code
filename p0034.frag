@@ -1,22 +1,27 @@
-// Train Whistle Burst
+// Train Stab Synth Flash
 // SPDX-License-Identifier: CC-BY-NC-SA-4.0
 // Copyright (c) 2026 pino (https://pino-the-bird.github.io/code/p0034.html)
 // https://creativecommons.org/licenses/by-nc-sa/4.0/
 // uniforms: vec3 iResolution, float iTime, vec4 iMouse, int iFrame
 
-const float P_w0_speed = 0.678;
-const float P_w1_amount = 0.252;
-const float P_w1_size = 2.0;
-const float P_a_size = 0.857;
-const float P_s_orbit = 0.205;
-const float P_s_distance = 4.5;
-const float P_s_steps = 76.766;
+const float P_w0_speed = 0.615;
+const float P_w1_cell = 2.831;
+const float P_w2_amount = 0.313;
+const float P_w2_size = 2.0;
+const float P_w3_size = 1.5;
+const float P_w3_layers = 2.0;
+const float P_w3_amount = 0.445;
+const float P_a_scale = 3.306;
+const float P_a_cover = 0.241;
+const float P_s_orbit = 0.311;
+const float P_s_distance = 4.442;
+const float P_s_steps = 33.0;
 const float P_shift = 0.0;
-const float P_spread = 1.54;
-const float P_glow = 0.562;
-const float P_exposure = 1.032;
-const float P_grain = 0.027;
-const float P_vignette = 0.347;
+const float P_spread = 1.886;
+const float P_glow = 0.726;
+const float P_exposure = 0.9;
+const float P_grain = 0.03;
+const float P_vignette = 0.35;
 const float P_speed = 0.44;
 
 float PAL_T = 0.0;
@@ -54,18 +59,30 @@ vec3 warp0(vec3 p, float t) {
 }
 
 vec3 warp1(vec3 p, float t) {
-  p += P_w1_amount * sin(p.yzx * P_w1_size + t);
+  p = abs(mod(p + 1.5 * P_w1_cell, 2.0 * P_w1_cell) - P_w1_cell) - 0.5 * P_w1_cell;
+  return p;
+}
+
+vec3 warp2(vec3 p, float t) {
+  p += P_w2_amount * sin(p.yzx * P_w2_size + t);
+  return p;
+}
+
+vec3 warp3(vec3 p, float t) {
+  float f = P_w3_size; for (int i = 0; i < 6; i++) { if (float(i) >= P_w3_layers) break; p += P_w3_amount * sin(p.zxy * f + t + float(i)) / f; p.xy = rot(0.7) * p.xy; f *= 1.7; }
   return p;
 }
 
 float formA(vec3 p) {
-  return length(p) - P_a_size;
+  vec3 q = p * P_a_scale; return (abs(dot(cos(TURN * q), sin(1.618 * TURN * q))) * 0.4 - P_a_cover * 0.4) / P_a_scale;
 }
 
 float field(vec3 p, float t) {
   vec3 q = p;
   p = warp0(p, t);
   p = warp1(p, t);
+  p = warp2(p, t);
+  p = warp3(p, t);
   float a = formA(p);
   a = max(a, length(q) - 1.8);
   return a;
