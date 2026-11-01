@@ -1,0 +1,45 @@
+{
+  "space": {
+    "part": "kaleidoscope",
+    "zoom": 1.911,
+    "slices": 7.378
+  },
+  "warps": [
+    {
+      "part": "melt",
+      "amount": 0.437,
+      "scale": 1.2
+    },
+    {
+      "part": "drift",
+      "speed": 0.664
+    }
+  ],
+  "form": {
+    "part": "lattice",
+    "cell": 1,
+    "thickness": 0.101
+  },
+  "with": {
+    "part": "waves",
+    "join": "add",
+    "size": 1.428,
+    "height": 0.234,
+    "soft": 0.288
+  },
+  "colour": {
+    "palette": "copper",
+    "by": "depth",
+    "shift": 0.061,
+    "spread": 1.997,
+    "glow": 0.716
+  },
+  "finish": {
+    "tone": "filmic",
+    "exposure": 1.117,
+    "grain": 0.02,
+    "vignette": 0.3
+  },
+  "speed": 0.228,
+  "samples": 1
+}
