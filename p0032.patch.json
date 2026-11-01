@@ -1,0 +1,40 @@
+{
+  "space": {
+    "part": "tunnel",
+    "zoom": 0.782
+  },
+  "warps": [
+    {
+      "part": "ripple",
+      "amount": 0.2,
+      "size": 2
+    },
+    {
+      "part": "twist",
+      "amount": 0.3
+    },
+    {
+      "part": "spin",
+      "speed": 0.4
+    }
+  ],
+  "form": {
+    "part": "sphere",
+    "size": 0.8
+  },
+  "colour": {
+    "palette": "dusk",
+    "by": "depth",
+    "shift": 0,
+    "spread": 1,
+    "glow": 0.6
+  },
+  "finish": {
+    "tone": "soft",
+    "exposure": 1,
+    "grain": 0.02,
+    "vignette": 0.3
+  },
+  "speed": 0.125,
+  "samples": 1
+}
