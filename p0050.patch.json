@@ -1,0 +1,52 @@
+{
+  "space": {
+    "part": "cloud",
+    "distance": 2.907,
+    "steps": 36,
+    "density": 1.282
+  },
+  "warps": [
+    {
+      "part": "breathe",
+      "amount": 0.2,
+      "size": 1
+    },
+    {
+      "part": "turbulence",
+      "amount": 0.393,
+      "layers": 4.327,
+      "size": 1.355
+    },
+    {
+      "part": "drift",
+      "speed": 0.638
+    }
+  ],
+  "form": {
+    "part": "gyroid",
+    "scale": 2.272,
+    "thickness": 0.15
+  },
+  "with": {
+    "part": "waves",
+    "join": "mix",
+    "size": 2,
+    "height": 0.3,
+    "soft": 0.257
+  },
+  "colour": {
+    "palette": "dusk",
+    "by": "depth",
+    "shift": 0.088,
+    "spread": 2,
+    "glow": 0.492
+  },
+  "finish": {
+    "tone": "filmic",
+    "exposure": 1,
+    "grain": 0.013,
+    "vignette": 0.305
+  },
+  "speed": 0.432,
+  "samples": 1
+}
