@@ -1,23 +1,23 @@
-// Edinburgh Tram Loop
+// Endless Tram Line
 // SPDX-License-Identifier: CC-BY-NC-SA-4.0
 // Copyright (c) 2026 pino (https://pino-the-bird.github.io/code/p0049.html)
 // https://creativecommons.org/licenses/by-nc-sa/4.0/
 // uniforms: vec3 iResolution, float iTime, vec4 iMouse, int iFrame
 
-const float P_w0_speed = 0.6;
-const float P_w1_cell = 2.5;
-const float P_w2_amount = 0.2;
-const float P_w2_size = 3.0;
-const float P_a_size = 0.3;
+const float P_w0_speed = 0.542;
+const float P_w1_cell = 1.933;
+const float P_w2_amount = 0.194;
+const float P_w2_size = 2.495;
+const float P_a_size = 0.512;
 const float P_a_thickness = 0.05;
-const float P_b_height = 0.1;
-const float P_b_size = 1.2;
-const float P_s_zoom = 2.5;
-const float P_shift = 0.1;
-const float P_spread = 1.5;
-const float P_glow = 0.3;
+const float P_b_height = 0.05;
+const float P_b_size = 1.643;
+const float P_s_zoom = 3.474;
+const float P_shift = 0.044;
+const float P_spread = 1.262;
+const float P_glow = 0.6;
 const float P_exposure = 1.0;
-const float P_grain = 0.01;
+const float P_grain = 0.008;
 const float P_vignette = 0.2;
 const float P_speed = 0.3;
 
@@ -87,7 +87,7 @@ float field(vec3 p, float t) {
 vec3 look(vec2 uv, float t) {
   vec3 p = vec3(uv * P_s_zoom, 0.0);
   float d = field(p, t);
-  float v = (length(uv) * 0.6);
+  float v = (uv.y * 0.5);
   vec3 col = pal(v) * smoothstep(0.012 * P_s_zoom, -0.012 * P_s_zoom, d);
   col += pal(v + 0.15) * P_glow * exp(-abs(d) * 5.0 / P_s_zoom);
   return col + pal(v + 0.5) * 0.04;
