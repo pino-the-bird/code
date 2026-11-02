@@ -1,25 +1,25 @@
-// Neon Train Lattice
+// Edinburgh Tram Loop
 // SPDX-License-Identifier: CC-BY-NC-SA-4.0
 // Copyright (c) 2026 pino (https://pino-the-bird.github.io/code/p0049.html)
 // https://creativecommons.org/licenses/by-nc-sa/4.0/
 // uniforms: vec3 iResolution, float iTime, vec4 iMouse, int iFrame
 
-const float P_w0_scale = 1.2;
-const float P_w0_amount = 0.437;
-const float P_w1_speed = 0.664;
-const float P_a_cell = 1.0;
-const float P_a_thickness = 0.101;
-const float P_b_height = 0.234;
-const float P_b_size = 1.428;
-const float P_s_slices = 7.378;
-const float P_s_zoom = 1.911;
-const float P_shift = 0.061;
-const float P_spread = 1.997;
-const float P_glow = 0.716;
-const float P_exposure = 1.117;
-const float P_grain = 0.02;
-const float P_vignette = 0.3;
-const float P_speed = 0.228;
+const float P_w0_speed = 0.6;
+const float P_w1_cell = 2.5;
+const float P_w2_amount = 0.2;
+const float P_w2_size = 3.0;
+const float P_a_size = 0.3;
+const float P_a_thickness = 0.05;
+const float P_b_height = 0.1;
+const float P_b_size = 1.2;
+const float P_s_zoom = 2.5;
+const float P_shift = 0.1;
+const float P_spread = 1.5;
+const float P_glow = 0.3;
+const float P_exposure = 1.0;
+const float P_grain = 0.01;
+const float P_vignette = 0.2;
+const float P_speed = 0.3;
 
 float PAL_T = 0.0;
 
@@ -48,20 +48,25 @@ float fbm(vec3 p, float layers) {
 float smin(float a, float b, float k) { float h = clamp(0.5 + 0.5 * (b - a) / k, 0.0, 1.0); return mix(b, a, h) - k * h * (1.0 - h); }
 
 
-vec3 pal(float x) { return vec3(0.45, 0.35, 0.3) + vec3(0.4, 0.3, 0.25) * cos(6.28318 * (vec3(1.0, 1.2, 1.5) * x * P_spread + vec3(0.0, 0.15, 0.4) + P_shift + PAL_T * 0.04)); }
+vec3 pal(float x) { return vec3(0.2, 0.4, 0.5) + vec3(0.3, 0.3, 0.35) * cos(6.28318 * (vec3(1.0, 1.0, 1.0) * x * P_spread + vec3(0.5, 0.6, 0.7) + P_shift + PAL_T * 0.04)); }
 
 vec3 warp0(vec3 p, float t) {
-  vec3 q = p * P_w0_scale + t * 0.3; p += P_w0_amount * (vec3(noise(q), noise(q + 17.1), noise(q - 9.3)) - 0.5);
+  p.z += t * P_w0_speed;
   return p;
 }
 
 vec3 warp1(vec3 p, float t) {
-  p.z += t * P_w1_speed;
+  p = abs(mod(p + 1.5 * P_w1_cell, 2.0 * P_w1_cell) - P_w1_cell) - 0.5 * P_w1_cell;
+  return p;
+}
+
+vec3 warp2(vec3 p, float t) {
+  p += P_w2_amount * sin(p.yzx * P_w2_size + t);
   return p;
 }
 
 float formA(vec3 p) {
-  vec3 q = abs(mod(p + 0.5 * P_a_cell, P_a_cell) - 0.5 * P_a_cell); return min(min(max(q.x, q.y), max(q.y, q.z)), max(q.z, q.x)) - P_a_thickness;
+  vec2 q = vec2(length(p.xz) - P_a_size, p.y); return length(q) - P_a_thickness;
 }
 
 float formB(vec3 p) {
@@ -72,6 +77,7 @@ float field(vec3 p, float t) {
   vec3 q = p;
   p = warp0(p, t);
   p = warp1(p, t);
+  p = warp2(p, t);
   float a = formA(p);
   float b = formB(p);
   a = min(a, b);
@@ -79,10 +85,7 @@ float field(vec3 p, float t) {
 }
 
 vec3 look(vec2 uv, float t) {
-  float n = 6.28318 / floor(P_s_slices);
-  float a = abs(mod(atan(uv.y, uv.x), n) - 0.5 * n);
-  vec2 q = vec2(cos(a), sin(a)) * length(uv);
-  vec3 p = vec3(q * P_s_zoom, 0.0);
+  vec3 p = vec3(uv * P_s_zoom, 0.0);
   float d = field(p, t);
   float v = (length(uv) * 0.6);
   vec3 col = pal(v) * smoothstep(0.012 * P_s_zoom, -0.012 * P_s_zoom, d);
