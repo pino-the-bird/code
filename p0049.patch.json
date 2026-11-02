@@ -1,46 +1,46 @@
 {
   "space": {
     "part": "flat",
-    "zoom": 2.5
+    "zoom": 3.474
   },
   "warps": [
     {
       "part": "drift",
-      "speed": 0.6
+      "speed": 0.542
     },
     {
       "part": "repeat",
-      "cell": 2.5
+      "cell": 1.933
     },
     {
       "part": "ripple",
-      "amount": 0.2,
-      "size": 3
+      "amount": 0.194,
+      "size": 2.495
     }
   ],
   "form": {
     "part": "torus",
-    "size": 0.3,
+    "size": 0.512,
     "thickness": 0.05
   },
   "with": {
     "part": "waves",
     "join": "add",
-    "size": 1.2,
-    "height": 0.1,
-    "soft": 0.2
+    "size": 1.643,
+    "height": 0.05,
+    "soft": 0.177
   },
   "colour": {
     "palette": "sea",
-    "by": "depth",
-    "shift": 0.1,
-    "spread": 1.5,
-    "glow": 0.3
+    "by": "height",
+    "shift": 0.044,
+    "spread": 1.262,
+    "glow": 0.6
   },
   "finish": {
     "tone": "filmic",
     "exposure": 1,
-    "grain": 0.01,
+    "grain": 0.008,
     "vignette": 0.2
   },
   "speed": 0.3,
