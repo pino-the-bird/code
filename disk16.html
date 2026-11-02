@@ -1,0 +1,160 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>DISK 16 A STAR</title><style>body{margin:0;background:#141210;color:#e8e2d6;font-family:monospace;line-height:1.5}main{max-width:680px;margin:32px auto;padding:0 16px}canvas{display:block;margin:0 auto 20px;max-width:100%;background:#000}pre{background:#1e1a17;padding:12px;overflow:auto;border-radius:6px;font-size:12.5px}a{color:#e8b86d}h1{font-weight:normal;font-size:20px}p.meta{color:#9a9186;font-size:13px}</style></head>
+<body><main>
+<h1>DISK 16 / A STAR</h1>
+<canvas id="c" width="512" height="512"></canvas>
+<p>the shortest walk from your roost to the shrine through the streets of the town, found the way a game finds a path: it spreads out from the roost a square at a time, always trying first the square that looks closest to the shrine as the crow flies, until it gets there, then traces the way back</p>
+<p class="meta">a floppy disk out of the vending machine, run by pino on the computer at the internet cafe. Hart, Nilsson and Raphael, 1968; written for the cafe, on a map of the town.</p>
+<pre>function setup(ctx, W, H) {
+var k = { guess: 1 }
+/*TWEAK*/
+var small = ['1111111111111111', '1000000000000001', '1022200300222001', '1020000000002001', '1020044400002001', '1000040000000001', '1030040005000301', '1000000000000001', '1022200111022201', '1020000101000201', '1020000000000201', '1000033000330001', '1044000000004401', '1040002220000401', '1000000000000001', '1111111111111111']
+var n = 32, wall = new Uint8Array(n * n)
+for (var y = 0; y &lt; n; y++) for (var x = 0; x &lt; n; x++) wall[y * n + x] = small[y &gt;&gt; 1][x &gt;&gt; 1] !== '0' ? 1 : 0
+// the shrine is the gold wall; he stands in front of it
+var goal = 13 * n + 19, start = 28 * n + 3
+wall[goal] = 0
+function begin() {
+  var g = new Float32Array(n * n).fill(1e9), from = new Int32Array(n * n).fill(-1), shut = new Uint8Array(n * n)
+  g[start] = 0
+  return { g: g, from: from, shut: shut, open: [start], path: null, shown: 0, explored: 0 }
+}
+return { k: k, n: n, wall: wall, goal: goal, start: start, begin: begin, run: begin(), hold: 0 }
+}
+function update(state, t, W, H) {
+var s = state, n = s.n, r = s.run, gx = s.goal % n, gy = (s.goal / n) | 0
+if (r.path) { if (r.shown &lt; r.path.length) r.shown++; else if (++s.hold &gt; 90) { s.run = s.begin(); s.hold = 0 } return }
+for (var step = 0; step &lt; 4 &amp;&amp; r.open.length; step++) {
+  var bi = 0, best = 1e9
+  for (var i = 0; i &lt; r.open.length; i++) {
+    var c = r.open[i], h = Math.abs(c % n - gx) + Math.abs(((c / n) | 0) - gy)
+    var f = r.g[c] + h * s.k.guess
+    if (f &lt; best) { best = f; bi = i }
+  }
+  var cur = r.open.splice(bi, 1)[0]
+  r.shut[cur] = 1
+  r.explored++
+  if (cur === s.goal) {
+    var p = [], at = cur
+    while (at &gt;= 0) { p.unshift(at); at = r.from[at] }
+    r.path = p
+    return
+  }
+  var x = cur % n, y = (cur / n) | 0, nb = [[1, 0], [-1, 0], [0, 1], [0, -1]]
+  for (var j = 0; j &lt; 4; j++) {
+    var nx = x + nb[j][0], ny = y + nb[j][1]
+    if (nx &lt; 0 || ny &lt; 0 || nx &gt;= n || ny &gt;= n) continue
+    var ni = ny * n + nx
+    if (s.wall[ni] || r.shut[ni]) continue
+    if (r.g[cur] + 1 &lt; r.g[ni]) { r.g[ni] = r.g[cur] + 1; r.from[ni] = cur; if (r.open.indexOf(ni) &lt; 0) r.open.push(ni) }
+  }
+}
+}
+function render(ctx, state, t, W, H) {
+var s = state, n = s.n, r = s.run, z = W / n
+for (var i = 0; i &lt; n * n; i++) {
+  var x = (i % n) * z, y = ((i / n) | 0) * z
+  ctx.fillStyle = s.wall[i] ? '#2a2420' : r.shut[i] ? '#3d5a73' : '#d9d2c3'
+  ctx.fillRect(x, y, z, z)
+}
+ctx.fillStyle = '#7fb6e0'
+for (var o = 0; o &lt; r.open.length; o++) ctx.fillRect((r.open[o] % n) * z + 2, ((r.open[o] / n) | 0) * z + 2, z - 4, z - 4)
+if (r.path) {
+  ctx.fillStyle = '#f2c14e'
+  for (var p = 0; p &lt; r.shown; p++) ctx.fillRect((r.path[p] % n) * z + 3, ((r.path[p] / n) | 0) * z + 3, z - 6, z - 6)
+}
+ctx.fillStyle = '#e05a3a'
+ctx.fillRect((s.start % n) * z, ((s.start / n) | 0) * z, z, z)
+ctx.fillStyle = '#e8b52e'
+ctx.fillRect((s.goal % n) * z, ((s.goal / n) | 0) * z, z, z)
+ctx.fillStyle = '#fff'
+ctx.font = '14px monospace'
+ctx.fillText('roost', (s.start % n) * z + z + 4, ((s.start / n) | 0) * z + 12)
+ctx.fillText('shrine', (s.goal % n) * z + z + 4, ((s.goal / n) | 0) * z + 12)
+ctx.fillText('looked at ' + r.explored + ' squares' + (r.path ? ', ' + (r.path.length - 1) + ' steps' : ''), 8, H - 10)
+}</pre>
+<p class="meta"><a href="./">more of these</a></p>
+</main>
+<script>
+(function () {
+  var canvas = document.getElementById('c'), ctx = canvas.getContext('2d'), W = canvas.width, H = canvas.height
+  function setup(ctx, W, H) {
+{
+var k = { guess: 1 }
+/*TWEAK*/
+var small = ['1111111111111111', '1000000000000001', '1022200300222001', '1020000000002001', '1020044400002001', '1000040000000001', '1030040005000301', '1000000000000001', '1022200111022201', '1020000101000201', '1020000000000201', '1000033000330001', '1044000000004401', '1040002220000401', '1000000000000001', '1111111111111111']
+var n = 32, wall = new Uint8Array(n * n)
+for (var y = 0; y < n; y++) for (var x = 0; x < n; x++) wall[y * n + x] = small[y >> 1][x >> 1] !== '0' ? 1 : 0
+// the shrine is the gold wall; he stands in front of it
+var goal = 13 * n + 19, start = 28 * n + 3
+wall[goal] = 0
+function begin() {
+  var g = new Float32Array(n * n).fill(1e9), from = new Int32Array(n * n).fill(-1), shut = new Uint8Array(n * n)
+  g[start] = 0
+  return { g: g, from: from, shut: shut, open: [start], path: null, shown: 0, explored: 0 }
+}
+return { k: k, n: n, wall: wall, goal: goal, start: start, begin: begin, run: begin(), hold: 0 }
+}
+  }
+  function update(state, t, W, H) {
+{
+var s = state, n = s.n, r = s.run, gx = s.goal % n, gy = (s.goal / n) | 0
+if (r.path) { if (r.shown < r.path.length) r.shown++; else if (++s.hold > 90) { s.run = s.begin(); s.hold = 0 } return }
+for (var step = 0; step < 4 && r.open.length; step++) {
+  var bi = 0, best = 1e9
+  for (var i = 0; i < r.open.length; i++) {
+    var c = r.open[i], h = Math.abs(c % n - gx) + Math.abs(((c / n) | 0) - gy)
+    var f = r.g[c] + h * s.k.guess
+    if (f < best) { best = f; bi = i }
+  }
+  var cur = r.open.splice(bi, 1)[0]
+  r.shut[cur] = 1
+  r.explored++
+  if (cur === s.goal) {
+    var p = [], at = cur
+    while (at >= 0) { p.unshift(at); at = r.from[at] }
+    r.path = p
+    return
+  }
+  var x = cur % n, y = (cur / n) | 0, nb = [[1, 0], [-1, 0], [0, 1], [0, -1]]
+  for (var j = 0; j < 4; j++) {
+    var nx = x + nb[j][0], ny = y + nb[j][1]
+    if (nx < 0 || ny < 0 || nx >= n || ny >= n) continue
+    var ni = ny * n + nx
+    if (s.wall[ni] || r.shut[ni]) continue
+    if (r.g[cur] + 1 < r.g[ni]) { r.g[ni] = r.g[cur] + 1; r.from[ni] = cur; if (r.open.indexOf(ni) < 0) r.open.push(ni) }
+  }
+}
+}
+  }
+  function render(ctx, state, t, W, H) {
+{
+var s = state, n = s.n, r = s.run, z = W / n
+for (var i = 0; i < n * n; i++) {
+  var x = (i % n) * z, y = ((i / n) | 0) * z
+  ctx.fillStyle = s.wall[i] ? '#2a2420' : r.shut[i] ? '#3d5a73' : '#d9d2c3'
+  ctx.fillRect(x, y, z, z)
+}
+ctx.fillStyle = '#7fb6e0'
+for (var o = 0; o < r.open.length; o++) ctx.fillRect((r.open[o] % n) * z + 2, ((r.open[o] / n) | 0) * z + 2, z - 4, z - 4)
+if (r.path) {
+  ctx.fillStyle = '#f2c14e'
+  for (var p = 0; p < r.shown; p++) ctx.fillRect((r.path[p] % n) * z + 3, ((r.path[p] / n) | 0) * z + 3, z - 6, z - 6)
+}
+ctx.fillStyle = '#e05a3a'
+ctx.fillRect((s.start % n) * z, ((s.start / n) | 0) * z, z, z)
+ctx.fillStyle = '#e8b52e'
+ctx.fillRect((s.goal % n) * z, ((s.goal / n) | 0) * z, z, z)
+ctx.fillStyle = '#fff'
+ctx.font = '14px monospace'
+ctx.fillText('roost', (s.start % n) * z + z + 4, ((s.start / n) | 0) * z + 12)
+ctx.fillText('shrine', (s.goal % n) * z + z + 4, ((s.goal / n) | 0) * z + 12)
+ctx.fillText('looked at ' + r.explored + ' squares' + (r.path ? ', ' + (r.path.length - 1) + ' steps' : ''), 8, H - 10)
+}
+  }
+  var state = setup(ctx, W, H) || {}, t = 0
+  var steps = Math.max(1, Math.min(32, (state.steps | 0) || 1))
+  function frame() { for (var i = 0; i < steps; i++) update(state, t, W, H); render(ctx, state, t, W, H); t++; requestAnimationFrame(frame) }
+  frame()
+})()
+</script></body></html>
