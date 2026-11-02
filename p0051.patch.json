@@ -1,0 +1,49 @@
+{
+  "space": {
+    "part": "tunnel",
+    "zoom": 0.999
+  },
+  "warps": [
+    {
+      "part": "spin",
+      "speed": -0.069
+    },
+    {
+      "part": "drift",
+      "speed": 0.873
+    },
+    {
+      "part": "melt",
+      "amount": 0.482,
+      "scale": 1
+    }
+  ],
+  "form": {
+    "part": "clouds",
+    "scale": 0.3,
+    "layers": 5.06,
+    "cover": 0.439
+  },
+  "with": {
+    "part": "torus",
+    "join": "add",
+    "size": 0.8,
+    "thickness": 0.139,
+    "soft": 0.244
+  },
+  "colour": {
+    "palette": "neon",
+    "by": "depth",
+    "shift": 0.273,
+    "spread": 1.052,
+    "glow": 0.784
+  },
+  "finish": {
+    "tone": "tanh",
+    "exposure": 0.941,
+    "grain": 0.019,
+    "vignette": 0.376
+  },
+  "speed": 0.595,
+  "samples": 1
+}
