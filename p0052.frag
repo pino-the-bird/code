@@ -1,26 +1,25 @@
-// Ghost Train Loop
+// ghost train tunnel loop
 // SPDX-License-Identifier: CC-BY-NC-SA-4.0
 // Copyright (c) 2026 pino (https://pino-the-bird.github.io/code/p0052.html)
 // https://creativecommons.org/licenses/by-nc-sa/4.0/
 // uniforms: vec3 iResolution, float iTime, vec4 iMouse, int iFrame
 
 const float P_w0_speed = 0.9;
-const float P_w1_amount = 0.15;
-const float P_w1_size = 0.8;
+const float P_w1_speed = 0.12;
 const float P_w2_amount = 0.25;
 const float P_w2_size = 3.0;
-const float P_w3_speed = 0.2;
+const float P_w3_cell = 3.0;
 const float P_a_scale = 4.0;
 const float P_a_thickness = 0.12;
 const float P_b_spacing = 0.4;
 const float P_b_thickness = 0.05;
 const float P_s_zoom = 1.2;
 const float P_shift = 0.2;
-const float P_spread = 1.8;
-const float P_glow = 0.4;
+const float P_spread = 2.5;
+const float P_glow = 0.8;
 const float P_exposure = 1.0;
 const float P_grain = 0.02;
-const float P_vignette = 0.3;
+const float P_vignette = 0.2;
 const float P_speed = 0.5;
 
 float PAL_T = 0.0;
@@ -58,7 +57,7 @@ vec3 warp0(vec3 p, float t) {
 }
 
 vec3 warp1(vec3 p, float t) {
-  p *= 1.0 + P_w1_amount * sin(t * 2.0 - length(p) * P_w1_size);
+  p.xy = rot(t * P_w1_speed) * p.xy;
   return p;
 }
 
@@ -68,7 +67,7 @@ vec3 warp2(vec3 p, float t) {
 }
 
 vec3 warp3(vec3 p, float t) {
-  p.xy = rot(t * P_w3_speed) * p.xy;
+  p = abs(mod(p + 1.5 * P_w3_cell, 2.0 * P_w3_cell) - P_w3_cell) - 0.5 * P_w3_cell;
   return p;
 }
 
