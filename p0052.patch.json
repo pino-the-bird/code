@@ -9,9 +9,8 @@
       "speed": 0.9
     },
     {
-      "part": "breathe",
-      "amount": 0.15,
-      "size": 0.8
+      "part": "spin",
+      "speed": 0.12
     },
     {
       "part": "ripple",
@@ -19,8 +18,8 @@
       "size": 3
     },
     {
-      "part": "spin",
-      "speed": 0.2
+      "part": "repeat",
+      "cell": 3
     }
   ],
   "form": {
@@ -39,14 +38,14 @@
     "palette": "moss",
     "by": "depth",
     "shift": 0.2,
-    "spread": 1.8,
-    "glow": 0.4
+    "spread": 2.5,
+    "glow": 0.8
   },
   "finish": {
     "tone": "filmic",
     "exposure": 1,
     "grain": 0.02,
-    "vignette": 0.3
+    "vignette": 0.2
   },
   "speed": 0.5,
   "samples": 1
