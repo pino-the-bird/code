@@ -1,20 +1,20 @@
-// Endless Tram Line
+// Train Map Visualizer v4
 // SPDX-License-Identifier: CC-BY-NC-SA-4.0
 // Copyright (c) 2026 pino (https://pino-the-bird.github.io/code/p0049.html)
 // https://creativecommons.org/licenses/by-nc-sa/4.0/
 // uniforms: vec3 iResolution, float iTime, vec4 iMouse, int iFrame
 
-const float P_w0_speed = 0.542;
-const float P_w1_cell = 1.933;
-const float P_w2_amount = 0.194;
-const float P_w2_size = 2.495;
-const float P_a_size = 0.512;
+const float P_w0_speed = 0.6;
+const float P_w1_amount = 0.2;
+const float P_w1_size = 3.0;
+const float P_w2_cell = 2.5;
+const float P_a_size = 0.3;
 const float P_a_thickness = 0.05;
-const float P_b_height = 0.05;
-const float P_b_size = 1.643;
-const float P_s_zoom = 3.474;
-const float P_shift = 0.044;
-const float P_spread = 1.262;
+const float P_b_height = 0.02;
+const float P_b_size = 1.0;
+const float P_s_zoom = 2.5;
+const float P_shift = 0.1;
+const float P_spread = 1.5;
 const float P_glow = 0.6;
 const float P_exposure = 1.0;
 const float P_grain = 0.008;
@@ -56,12 +56,12 @@ vec3 warp0(vec3 p, float t) {
 }
 
 vec3 warp1(vec3 p, float t) {
-  p = abs(mod(p + 1.5 * P_w1_cell, 2.0 * P_w1_cell) - P_w1_cell) - 0.5 * P_w1_cell;
+  p += P_w1_amount * sin(p.yzx * P_w1_size + t);
   return p;
 }
 
 vec3 warp2(vec3 p, float t) {
-  p += P_w2_amount * sin(p.yzx * P_w2_size + t);
+  p = abs(mod(p + 1.5 * P_w2_cell, 2.0 * P_w2_cell) - P_w2_cell) - 0.5 * P_w2_cell;
   return p;
 }
 
