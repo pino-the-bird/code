@@ -1,0 +1,33 @@
+{
+  "space": {
+    "part": "polar",
+    "zoom": 1.337,
+    "arms": 4.397
+  },
+  "warps": [
+    {
+      "part": "drift",
+      "speed": 0.4
+    }
+  ],
+  "form": {
+    "part": "lattice",
+    "cell": 0.8,
+    "thickness": 0.05
+  },
+  "colour": {
+    "palette": "neon",
+    "by": "time",
+    "shift": 0.2,
+    "spread": 2,
+    "glow": 1
+  },
+  "finish": {
+    "tone": "filmic",
+    "exposure": 1,
+    "grain": 0.02,
+    "vignette": 0.3
+  },
+  "speed": 0.5,
+  "samples": 1
+}
