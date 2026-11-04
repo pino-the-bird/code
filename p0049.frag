@@ -1,4 +1,4 @@
-// Train Map Visualizer v4
+// Train Map Visualizer  tiny dot on a looping torus
 // SPDX-License-Identifier: CC-BY-NC-SA-4.0
 // Copyright (c) 2026 pino (https://pino-the-bird.github.io/code/p0049.html)
 // https://creativecommons.org/licenses/by-nc-sa/4.0/
