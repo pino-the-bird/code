@@ -1,27 +1,26 @@
 {
   "space": {
-    "part": "flat",
-    "zoom": 2.5
+    "part": "tunnel",
+    "zoom": 1.433
   },
   "warps": [
     {
+      "part": "twist",
+      "amount": 0.6
+    },
+    {
+      "part": "spin",
+      "speed": 0.15
+    },
+    {
       "part": "drift",
-      "speed": 0.6
-    },
-    {
-      "part": "ripple",
-      "amount": 0.2,
-      "size": 3
-    },
-    {
-      "part": "repeat",
-      "cell": 2.5
+      "speed": 0.4
     }
   ],
   "form": {
-    "part": "torus",
-    "size": 0.3,
-    "thickness": 0.05
+    "part": "gyroid",
+    "scale": 3,
+    "thickness": 0.12
   },
   "with": {
     "part": "waves",
@@ -31,11 +30,11 @@
     "soft": 0.1
   },
   "colour": {
-    "palette": "sea",
+    "palette": "neon",
     "by": "height",
-    "shift": 0.1,
-    "spread": 1.5,
-    "glow": 0.6
+    "shift": 0.2,
+    "spread": 2,
+    "glow": 0.8
   },
   "finish": {
     "tone": "filmic",
