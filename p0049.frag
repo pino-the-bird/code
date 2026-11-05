@@ -1,21 +1,20 @@
-// Train Map Visualizer  tiny dot on a looping torus
+// Tiny Dot Train Tunnel
 // SPDX-License-Identifier: CC-BY-NC-SA-4.0
 // Copyright (c) 2026 pino (https://pino-the-bird.github.io/code/p0049.html)
 // https://creativecommons.org/licenses/by-nc-sa/4.0/
 // uniforms: vec3 iResolution, float iTime, vec4 iMouse, int iFrame
 
-const float P_w0_speed = 0.6;
-const float P_w1_amount = 0.2;
-const float P_w1_size = 3.0;
-const float P_w2_cell = 2.5;
-const float P_a_size = 0.3;
-const float P_a_thickness = 0.05;
+const float P_w0_amount = 0.6;
+const float P_w1_speed = 0.15;
+const float P_w2_speed = 0.4;
+const float P_a_scale = 3.0;
+const float P_a_thickness = 0.12;
 const float P_b_height = 0.02;
 const float P_b_size = 1.0;
-const float P_s_zoom = 2.5;
-const float P_shift = 0.1;
-const float P_spread = 1.5;
-const float P_glow = 0.6;
+const float P_s_zoom = 1.433;
+const float P_shift = 0.2;
+const float P_spread = 2.0;
+const float P_glow = 0.8;
 const float P_exposure = 1.0;
 const float P_grain = 0.008;
 const float P_vignette = 0.2;
@@ -48,25 +47,25 @@ float fbm(vec3 p, float layers) {
 float smin(float a, float b, float k) { float h = clamp(0.5 + 0.5 * (b - a) / k, 0.0, 1.0); return mix(b, a, h) - k * h * (1.0 - h); }
 
 
-vec3 pal(float x) { return vec3(0.2, 0.4, 0.5) + vec3(0.3, 0.3, 0.35) * cos(6.28318 * (vec3(1.0, 1.0, 1.0) * x * P_spread + vec3(0.5, 0.6, 0.7) + P_shift + PAL_T * 0.04)); }
+vec3 pal(float x) { return vec3(0.5, 0.5, 0.5) + vec3(0.5, 0.5, 0.5) * cos(6.28318 * (vec3(2.0, 1.0, 0.0) * x * P_spread + vec3(0.5, 0.2, 0.25) + P_shift + PAL_T * 0.04)); }
 
 vec3 warp0(vec3 p, float t) {
-  p.z += t * P_w0_speed;
+  p.xy = rot(p.z * P_w0_amount) * p.xy;
   return p;
 }
 
 vec3 warp1(vec3 p, float t) {
-  p += P_w1_amount * sin(p.yzx * P_w1_size + t);
+  p.xy = rot(t * P_w1_speed) * p.xy;
   return p;
 }
 
 vec3 warp2(vec3 p, float t) {
-  p = abs(mod(p + 1.5 * P_w2_cell, 2.0 * P_w2_cell) - P_w2_cell) - 0.5 * P_w2_cell;
+  p.z += t * P_w2_speed;
   return p;
 }
 
 float formA(vec3 p) {
-  vec2 q = vec2(length(p.xz) - P_a_size, p.y); return length(q) - P_a_thickness;
+  vec3 q = p * P_a_scale; return (abs(dot(sin(q), cos(q.zxy))) - P_a_thickness) / P_a_scale;
 }
 
 float formB(vec3 p) {
@@ -85,12 +84,19 @@ float field(vec3 p, float t) {
 }
 
 vec3 look(vec2 uv, float t) {
-  vec3 p = vec3(uv * P_s_zoom, 0.0);
+  float r = max(length(uv), 1e-3);
+  // (the walls repeat along its length and come towards you, so a form recurs down the tube)
+  // (the walls are a real cylinder round you, so they meet themselves all the way round: an angle cut into tiles left a
+  // hard edge at every tile)
+  // (and along it each length the mirror of the next, so they meet too: cut off, a ring stood across the tube where one
+  // length ended. what is in both still comes towards you)
+  float a = atan(uv.y, uv.x);
+  vec3 p = vec3(cos(a), sin(a), abs(mod(1.0 / r + t + 2.5, 5.0) - 2.5) - 1.25) * P_s_zoom;
   float d = field(p, t);
   float v = (uv.y * 0.5);
-  vec3 col = pal(v) * smoothstep(0.012 * P_s_zoom, -0.012 * P_s_zoom, d);
-  col += pal(v + 0.15) * P_glow * exp(-abs(d) * 5.0 / P_s_zoom);
-  return col + pal(v + 0.5) * 0.04;
+  vec3 col = pal(v) * smoothstep(0.03, -0.03, d);
+  col += pal(v + 0.15) * P_glow * exp(-abs(d) * 4.0);
+  return (col + pal(v + 0.5) * 0.04) * smoothstep(0.0, 0.5, r);
 }
 
 void mainImage(out vec4 fragColor, in vec2 fragCoord) {
