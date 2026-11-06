@@ -1,0 +1,48 @@
+{
+  "space": {
+    "part": "tunnel",
+    "zoom": 1.243
+  },
+  "warps": [
+    {
+      "part": "twist",
+      "amount": 1.2
+    },
+    {
+      "part": "ripple",
+      "amount": 0.4,
+      "size": 1.5
+    },
+    {
+      "part": "drift",
+      "speed": 0.6
+    }
+  ],
+  "form": {
+    "part": "gyroid",
+    "scale": 4,
+    "thickness": 0.12
+  },
+  "with": {
+    "part": "lattice",
+    "join": "add",
+    "cell": 0.8,
+    "thickness": 0.05,
+    "soft": 0.3
+  },
+  "colour": {
+    "palette": "neon",
+    "by": "height",
+    "shift": 0.2,
+    "spread": 2,
+    "glow": 0.8
+  },
+  "finish": {
+    "tone": "soft",
+    "exposure": 1,
+    "grain": 0.02,
+    "vignette": 0.3
+  },
+  "speed": 0.5,
+  "samples": 1
+}
