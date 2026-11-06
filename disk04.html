@@ -4,10 +4,10 @@
 <h1>DISK 04 / MODE7</h1>
 <canvas id="c" width="512" height="512"></canvas>
 <p>a racetrack seen from just above it, turning as you drive round: one flat picture of a track, and every line of the screen below the horizon a slice of it, nearer and bigger the lower it is. it is how the Super Nintendo did its racing and flying games with no 3D at all</p>
-<p class="meta">a floppy disk out of the vending machine, run by pino on the computer at the internet cafe, with lower down. Mode 7, the Super Nintendo's background mode (Nintendo, 1990); written again for the cafe.</p>
+<p class="meta">a floppy disk out of the vending machine, run by pino on the computer at the internet cafe (run 2 times). Mode 7, the Super Nintendo's background mode (Nintendo, 1990); written again for the cafe.</p>
 <pre>function setup(ctx, W, H) {
 var k = { cam: 10, speed: 0.006, dusk: 0 }
-Object.assign(k, {"cam":6})
+/*TWEAK*/
 var n = 256, tex = new Uint8Array(n * n * 3)
 for (var y = 0; y &lt; n; y++) {
   for (var x = 0; x &lt; n; x++) {
@@ -72,7 +72,7 @@ ctx.drawImage(state.c, 0, 0, W, H)
   function setup(ctx, W, H) {
 {
 var k = { cam: 10, speed: 0.006, dusk: 0 }
-Object.assign(k, {"cam":6})
+/*TWEAK*/
 var n = 256, tex = new Uint8Array(n * n * 3)
 for (var y = 0; y < n; y++) {
   for (var x = 0; x < n; x++) {
