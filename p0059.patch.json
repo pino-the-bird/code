@@ -1,0 +1,44 @@
+{
+  "space": {
+    "part": "flat",
+    "zoom": 2.5
+  },
+  "warps": [
+    {
+      "part": "ripple",
+      "amount": 0.4,
+      "size": 1.5
+    },
+    {
+      "part": "drift",
+      "speed": 0.6
+    }
+  ],
+  "form": {
+    "part": "sphere",
+    "size": 0.6
+  },
+  "with": {
+    "part": "clouds",
+    "join": "melt",
+    "scale": 1.2,
+    "layers": 3,
+    "cover": 0.4,
+    "soft": 0.3
+  },
+  "colour": {
+    "palette": "ice",
+    "by": "depth",
+    "shift": 0.2,
+    "spread": 2.5,
+    "glow": 0.8
+  },
+  "finish": {
+    "tone": "filmic",
+    "exposure": 1,
+    "grain": 0.02,
+    "vignette": 0.3
+  },
+  "speed": 0.5,
+  "samples": 1
+}
