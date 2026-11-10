@@ -1,0 +1,38 @@
+{
+  "space": {
+    "part": "polar",
+    "zoom": 2.139,
+    "arms": 1.616
+  },
+  "warps": [
+    {
+      "part": "ripple",
+      "amount": 0.3,
+      "size": 2
+    },
+    {
+      "part": "spin",
+      "speed": 0.6
+    }
+  ],
+  "form": {
+    "part": "box",
+    "size": 0.3,
+    "round": 0.1
+  },
+  "colour": {
+    "palette": "neon",
+    "by": "height",
+    "shift": 0,
+    "spread": 2,
+    "glow": 1.2
+  },
+  "finish": {
+    "tone": "filmic",
+    "exposure": 1,
+    "grain": 0.02,
+    "vignette": 0.3
+  },
+  "speed": 0.5,
+  "samples": 1
+}
