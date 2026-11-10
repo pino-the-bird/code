@@ -4,10 +4,10 @@
 <h1>DISK 16 / A STAR</h1>
 <canvas id="c" width="512" height="512"></canvas>
 <p>the shortest walk from your roost to the shrine through the streets of the town, found the way a game finds a path: it spreads out from the roost a square at a time, always trying first the square that looks closest to the shrine as the crow flies, until it gets there, then traces the way back</p>
-<p class="meta">a floppy disk out of the vending machine, run by pino on the computer at the internet cafe, with guess hard (run 3 times). Hart, Nilsson and Raphael, 1968; written for the cafe, on a map of the town.</p>
+<p class="meta">a floppy disk out of the vending machine, run by pino on the computer at the internet cafe (run 4 times). Hart, Nilsson and Raphael, 1968; written for the cafe, on a map of the town.</p>
 <pre>function setup(ctx, W, H) {
 var k = { guess: 1 }
-Object.assign(k, {"guess":3})
+/*TWEAK*/
 var small = ['1111111111111111', '1000000000000001', '1022200300222001', '1020000000002001', '1020044400002001', '1000040000000001', '1030040005000301', '1000000000000001', '1022200111022201', '1020000101000201', '1020000000000201', '1000033000330001', '1044000000004401', '1040002220000401', '1000000000000001', '1111111111111111']
 var n = 32, wall = new Uint8Array(n * n)
 for (var y = 0; y &lt; n; y++) for (var x = 0; x &lt; n; x++) wall[y * n + x] = small[y &gt;&gt; 1][x &gt;&gt; 1] !== '0' ? 1 : 0
@@ -81,7 +81,7 @@ ctx.fillText('looked at ' + r.explored + ' squares' + (r.path ? ', ' + (r.path.l
   function setup(ctx, W, H) {
 {
 var k = { guess: 1 }
-Object.assign(k, {"guess":3})
+/*TWEAK*/
 var small = ['1111111111111111', '1000000000000001', '1022200300222001', '1020000000002001', '1020044400002001', '1000040000000001', '1030040005000301', '1000000000000001', '1022200111022201', '1020000101000201', '1020000000000201', '1000033000330001', '1044000000004401', '1040002220000401', '1000000000000001', '1111111111111111']
 var n = 32, wall = new Uint8Array(n * n)
 for (var y = 0; y < n; y++) for (var x = 0; x < n; x++) wall[y * n + x] = small[y >> 1][x >> 1] !== '0' ? 1 : 0
