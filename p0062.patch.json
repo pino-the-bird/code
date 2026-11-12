@@ -1,0 +1,43 @@
+{
+  "space": {
+    "part": "flat",
+    "zoom": 3.156
+  },
+  "warps": [
+    {
+      "part": "drift",
+      "speed": 0.208
+    },
+    {
+      "part": "spin",
+      "speed": 0.06
+    }
+  ],
+  "form": {
+    "part": "cells",
+    "scale": 1.596,
+    "edge": 0.072
+  },
+  "with": {
+    "part": "weave",
+    "join": "add",
+    "scale": 1.637,
+    "cover": 0.492,
+    "soft": 0.258
+  },
+  "colour": {
+    "palette": "moss",
+    "by": "time",
+    "shift": 0.09,
+    "spread": 2,
+    "glow": 0.4
+  },
+  "finish": {
+    "tone": "soft",
+    "exposure": 1.078,
+    "grain": 0.022,
+    "vignette": 0.333
+  },
+  "speed": 0.407,
+  "samples": 1
+}
