@@ -1,0 +1,51 @@
+{
+  "space": {
+    "part": "solid",
+    "distance": 4.466,
+    "orbit": 0.132,
+    "steps": 70.63
+  },
+  "warps": [
+    {
+      "part": "melt",
+      "amount": 0.3,
+      "scale": 1
+    },
+    {
+      "part": "spin",
+      "speed": 0.837
+    },
+    {
+      "part": "breathe",
+      "amount": 0.15,
+      "size": 1.2
+    }
+  ],
+  "form": {
+    "part": "torus",
+    "size": 1.022,
+    "thickness": 0.329
+  },
+  "with": {
+    "part": "lattice",
+    "join": "melt",
+    "cell": 0.986,
+    "thickness": 0.064,
+    "soft": 0.4
+  },
+  "colour": {
+    "palette": "neon",
+    "by": "depth",
+    "shift": 0.026,
+    "spread": 2,
+    "glow": 0.8
+  },
+  "finish": {
+    "tone": "filmic",
+    "exposure": 0.904,
+    "grain": 0.017,
+    "vignette": 0.315
+  },
+  "speed": 0.5,
+  "samples": 1
+}
