@@ -1,0 +1,48 @@
+{
+  "space": {
+    "part": "tunnel",
+    "zoom": 1.1
+  },
+  "warps": [
+    {
+      "part": "drift",
+      "speed": 0.8
+    },
+    {
+      "part": "twist",
+      "amount": 1.454
+    },
+    {
+      "part": "ripple",
+      "amount": 0.215,
+      "size": 2
+    }
+  ],
+  "form": {
+    "part": "shells",
+    "spacing": 0.286,
+    "thickness": 0.045
+  },
+  "with": {
+    "part": "cells",
+    "join": "add",
+    "scale": 2.5,
+    "edge": 0.08,
+    "soft": 0.3
+  },
+  "colour": {
+    "palette": "neon",
+    "by": "field",
+    "shift": 0,
+    "spread": 0.834,
+    "glow": 0.6
+  },
+  "finish": {
+    "tone": "filmic",
+    "exposure": 1,
+    "grain": 0.025,
+    "vignette": 0.3
+  },
+  "speed": 0.5,
+  "samples": 1
+}
