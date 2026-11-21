@@ -1,0 +1,43 @@
+{
+  "space": {
+    "part": "solid",
+    "distance": 4.353,
+    "orbit": 0.2,
+    "steps": 86.844
+  },
+  "warps": [
+    {
+      "part": "spin",
+      "speed": 0.256
+    },
+    {
+      "part": "drift",
+      "speed": 0.502
+    },
+    {
+      "part": "ripple",
+      "amount": 0.23,
+      "size": 2
+    }
+  ],
+  "form": {
+    "part": "box",
+    "size": 1.406,
+    "round": 0.15
+  },
+  "colour": {
+    "palette": "copper",
+    "by": "depth",
+    "shift": 0.1,
+    "spread": 1.5,
+    "glow": 0.4
+  },
+  "finish": {
+    "tone": "filmic",
+    "exposure": 1,
+    "grain": 0.019,
+    "vignette": 0.268
+  },
+  "speed": 0.719,
+  "samples": 1
+}
