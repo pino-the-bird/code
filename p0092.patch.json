@@ -1,0 +1,55 @@
+{
+  "space": {
+    "part": "solid",
+    "distance": 5,
+    "orbit": 0.3,
+    "steps": 80
+  },
+  "warps": [
+    {
+      "part": "breathe",
+      "amount": 0.35,
+      "size": 1.382
+    },
+    {
+      "part": "ripple",
+      "amount": 0.161,
+      "size": 1.508
+    },
+    {
+      "part": "spin",
+      "speed": 0.503
+    },
+    {
+      "part": "twist",
+      "amount": 0.6
+    }
+  ],
+  "form": {
+    "part": "gyroid",
+    "scale": 2.457,
+    "thickness": 0.155
+  },
+  "with": {
+    "part": "waves",
+    "join": "mix",
+    "size": 2.465,
+    "height": 0.4,
+    "soft": 0.353
+  },
+  "colour": {
+    "palette": "ember",
+    "by": "depth",
+    "shift": 0.1,
+    "spread": 1.895,
+    "glow": 0.624
+  },
+  "finish": {
+    "tone": "filmic",
+    "exposure": 1.158,
+    "grain": 0.03,
+    "vignette": 0.3
+  },
+  "speed": 0.5,
+  "samples": 1
+}
