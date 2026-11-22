@@ -1,0 +1,48 @@
+{
+  "space": {
+    "part": "kaleidoscope",
+    "zoom": 2.37,
+    "slices": 5.019
+  },
+  "warps": [
+    {
+      "part": "spin",
+      "speed": 0.511
+    },
+    {
+      "part": "breathe",
+      "amount": 0.2,
+      "size": 1.116
+    },
+    {
+      "part": "turbulence",
+      "amount": 0.3,
+      "layers": 2.863,
+      "size": 1.01
+    },
+    {
+      "part": "drift",
+      "speed": 0.6
+    }
+  ],
+  "form": {
+    "part": "torus",
+    "size": 1,
+    "thickness": 0.28
+  },
+  "colour": {
+    "palette": "neon",
+    "by": "depth",
+    "shift": 0,
+    "spread": 1,
+    "glow": 0.563
+  },
+  "finish": {
+    "tone": "filmic",
+    "exposure": 1.087,
+    "grain": 0.02,
+    "vignette": 0.388
+  },
+  "speed": 0.466,
+  "samples": 1
+}
