@@ -1,0 +1,45 @@
+{
+  "space": {
+    "part": "solid",
+    "distance": 4.571,
+    "orbit": 0.128,
+    "steps": 74.229
+  },
+  "warps": [
+    {
+      "part": "drift",
+      "speed": 0.235
+    },
+    {
+      "part": "breathe",
+      "amount": 0.229,
+      "size": 0.398
+    }
+  ],
+  "form": {
+    "part": "sphere",
+    "size": 0.9
+  },
+  "with": {
+    "part": "box",
+    "join": "melt",
+    "size": 0.643,
+    "round": 0.084,
+    "soft": 0.239
+  },
+  "colour": {
+    "palette": "sea",
+    "by": "depth",
+    "shift": 0,
+    "spread": 0.807,
+    "glow": 0.332
+  },
+  "finish": {
+    "tone": "filmic",
+    "exposure": 0.975,
+    "grain": 0.01,
+    "vignette": 0.304
+  },
+  "speed": 0.473,
+  "samples": 1
+}
