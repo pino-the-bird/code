@@ -1,0 +1,190 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>DISK 14 WFC</title><style>body{margin:0;background:#141210;color:#e8e2d6;font-family:monospace;line-height:1.5}main{max-width:680px;margin:32px auto;padding:0 16px}canvas{display:block;margin:0 auto 20px;max-width:100%;background:#000}pre{background:#1e1a17;padding:12px;overflow:auto;border-radius:6px;font-size:12.5px}a{color:#e8b86d}h1{font-weight:normal;font-size:20px}p.meta{color:#9a9186;font-size:13px}</style></head>
+<body><main>
+<h1>DISK 14 / WFC</h1>
+<canvas id="c" width="512" height="512"></canvas>
+<p>a town that draws itself: every square starts as every possible tile at once, roads, grass, roofs, trees. the square with the fewest choices left is settled at random, and that rules out tiles next to it whose edges would not match, and so on until the whole map has fallen into place. when it paints itself into a corner it starts again</p>
+<p class="meta">a floppy disk out of the vending machine, run by pino on the computer at the internet cafe, with more roads. Maxim Gumin's WaveFunctionCollapse (MIT licence, 2016); written again for the cafe.</p>
+<pre>function setup(ctx, W, H) {
+var k = { cells: 16, road: 1, house: 1 }
+Object.assign(k, {"road":3})
+// a tile and its four edges, north east south west: g grass, r road
+var tiles = [
+  { name: 'grass', e: 'gggg', w: 6 }, { name: 'tree', e: 'gggg', w: 2 }, { name: 'house', e: 'gggg', w: 2 * k.house },
+  { name: 'ns', e: 'rgrg', w: 2 * k.road }, { name: 'ew', e: 'grgr', w: 2 * k.road },
+  { name: 'ne', e: 'rrgg', w: k.road }, { name: 'es', e: 'grrg', w: k.road }, { name: 'sw', e: 'ggrr', w: k.road }, { name: 'wn', e: 'rggr', w: k.road },
+  { name: 'cross', e: 'rrrr', w: 0.5 * k.road }, { name: 'tn', e: 'rrgr', w: 0.5 }, { name: 'te', e: 'rrrg', w: 0.5 }, { name: 'ts', e: 'grrr', w: 0.5 }, { name: 'tw', e: 'rgrr', w: 0.5 },
+  // dead ends, so every set of four edges has a tile and it never paints itself into a corner
+  { name: 'en', e: 'rggg', w: 0.15 }, { name: 'ee', e: 'grgg', w: 0.15 }, { name: 'es2', e: 'ggrg', w: 0.15 }, { name: 'ew2', e: 'gggr', w: 0.15 },
+]
+function fresh() { var g = []; for (var i = 0; i &lt; k.cells * k.cells; i++) { var all = []; for (var j = 0; j &lt; tiles.length; j++) all.push(j); g.push(all) } return g }
+return { k: k, tiles: tiles, grid: fresh(), fresh: fresh, done: 0, hold: 0, starts: 1 }
+}
+function update(state, t, W, H) {
+var s = state, n = s.k.cells, g = s.grid, tl = s.tiles
+if (s.done) { if (++s.hold &gt; 70) { s.grid = s.fresh(); s.done = 0; s.hold = 0; s.starts++ } return }
+for (var step = 0; step &lt; 3; step++) {
+  var best = -1, least = 99
+  for (var i = 0; i &lt; g.length; i++) { var c = g[i].length; if (c &gt; 1 &amp;&amp; c + Math.random() * 0.5 &lt; least) { least = c + Math.random() * 0.5; best = i } }
+  if (best &lt; 0) { s.done = 1; return }
+  var opts = g[best], total = 0
+  for (var a = 0; a &lt; opts.length; a++) total += tl[opts[a]].w
+  var r = Math.random() * total, pick = opts[0]
+  for (var b = 0; b &lt; opts.length; b++) { r -= tl[opts[b]].w; if (r &lt;= 0) { pick = opts[b]; break } }
+  g[best] = [pick]
+  var stack = [best]
+  while (stack.length) {
+    var at = stack.pop(), x = at % n, y = (at / n) | 0
+    var dirs = [[0, -1, 0, 2], [1, 0, 1, 3], [0, 1, 2, 0], [-1, 0, 3, 1]]
+    for (var d = 0; d &lt; 4; d++) {
+      var nx = x + dirs[d][0], ny = y + dirs[d][1]
+      if (nx &lt; 0 || ny &lt; 0 || nx &gt;= n || ny &gt;= n) continue
+      var ni = ny * n + nx, mine = g[at], theirs = g[ni]
+      var keep = theirs.filter(function (o) { return mine.some(function (m) { return tl[m].e[dirs[d][2]] === tl[o].e[dirs[d][3]] }) })
+      if (keep.length === theirs.length) continue
+      if (!keep.length) { s.grid = s.fresh(); s.starts++; return }
+      g[ni] = keep
+      stack.push(ni)
+    }
+  }
+}
+}
+function render(ctx, state, t, W, H) {
+var s = state, n = s.k.cells, g = s.grid, tl = s.tiles, z = W / n
+ctx.fillStyle = '#10140f'
+ctx.fillRect(0, 0, W, H)
+for (var i = 0; i &lt; g.length; i++) {
+  var x = (i % n) * z, y = ((i / n) | 0) * z
+  if (g[i].length &gt; 1) {
+    var fog = 20 + (1 - g[i].length / tl.length) * 40
+    ctx.fillStyle = 'rgb(' + (fog | 0) + ',' + (fog + 6 | 0) + ',' + (fog + 4 | 0) + ')'
+    ctx.fillRect(x + 1, y + 1, z - 2, z - 2)
+    continue
+  }
+  var t0 = tl[g[i][0]], e = t0.e
+  ctx.fillStyle = (i * 7) % 3 ? '#4f8a3c' : '#56923f'
+  ctx.fillRect(x, y, z, z)
+  ctx.fillStyle = '#56565c'
+  var m = z / 2, wd = z * 0.36
+  if (e[0] === 'r') ctx.fillRect(x + m - wd / 2, y, wd, m + wd / 2)
+  if (e[2] === 'r') ctx.fillRect(x + m - wd / 2, y + m - wd / 2, wd, m + wd / 2)
+  if (e[1] === 'r') ctx.fillRect(x + m - wd / 2, y + m - wd / 2, m + wd / 2, wd)
+  if (e[3] === 'r') ctx.fillRect(x, y + m - wd / 2, m + wd / 2, wd)
+  if (t0.name === 'house') {
+    var hue = (i * 47) % 360
+    ctx.fillStyle = 'hsl(' + hue + ',35%,55%)'
+    ctx.fillRect(x + z * 0.18, y + z * 0.2, z * 0.64, z * 0.6)
+    ctx.fillStyle = 'hsl(' + hue + ',45%,30%)'
+    ctx.fillRect(x + z * 0.18, y + z * 0.2, z * 0.64, z * 0.18)
+    ctx.fillStyle = '#f2d98a'
+    ctx.fillRect(x + z * 0.3, y + z * 0.5, z * 0.12, z * 0.12)
+    ctx.fillRect(x + z * 0.58, y + z * 0.5, z * 0.12, z * 0.12)
+  }
+  if (t0.name === 'tree') {
+    ctx.fillStyle = '#2c5e2a'
+    ctx.beginPath()
+    ctx.arc(x + m, y + m, z * 0.3, 0, Math.PI * 2)
+    ctx.fill()
+  }
+}
+}</pre>
+<p class="meta"><a href="./">more of these</a></p>
+</main>
+<script>
+(function () {
+  var canvas = document.getElementById('c'), ctx = canvas.getContext('2d'), W = canvas.width, H = canvas.height
+  function setup(ctx, W, H) {
+{
+var k = { cells: 16, road: 1, house: 1 }
+Object.assign(k, {"road":3})
+// a tile and its four edges, north east south west: g grass, r road
+var tiles = [
+  { name: 'grass', e: 'gggg', w: 6 }, { name: 'tree', e: 'gggg', w: 2 }, { name: 'house', e: 'gggg', w: 2 * k.house },
+  { name: 'ns', e: 'rgrg', w: 2 * k.road }, { name: 'ew', e: 'grgr', w: 2 * k.road },
+  { name: 'ne', e: 'rrgg', w: k.road }, { name: 'es', e: 'grrg', w: k.road }, { name: 'sw', e: 'ggrr', w: k.road }, { name: 'wn', e: 'rggr', w: k.road },
+  { name: 'cross', e: 'rrrr', w: 0.5 * k.road }, { name: 'tn', e: 'rrgr', w: 0.5 }, { name: 'te', e: 'rrrg', w: 0.5 }, { name: 'ts', e: 'grrr', w: 0.5 }, { name: 'tw', e: 'rgrr', w: 0.5 },
+  // dead ends, so every set of four edges has a tile and it never paints itself into a corner
+  { name: 'en', e: 'rggg', w: 0.15 }, { name: 'ee', e: 'grgg', w: 0.15 }, { name: 'es2', e: 'ggrg', w: 0.15 }, { name: 'ew2', e: 'gggr', w: 0.15 },
+]
+function fresh() { var g = []; for (var i = 0; i < k.cells * k.cells; i++) { var all = []; for (var j = 0; j < tiles.length; j++) all.push(j); g.push(all) } return g }
+return { k: k, tiles: tiles, grid: fresh(), fresh: fresh, done: 0, hold: 0, starts: 1 }
+}
+  }
+  function update(state, t, W, H) {
+{
+var s = state, n = s.k.cells, g = s.grid, tl = s.tiles
+if (s.done) { if (++s.hold > 70) { s.grid = s.fresh(); s.done = 0; s.hold = 0; s.starts++ } return }
+for (var step = 0; step < 3; step++) {
+  var best = -1, least = 99
+  for (var i = 0; i < g.length; i++) { var c = g[i].length; if (c > 1 && c + Math.random() * 0.5 < least) { least = c + Math.random() * 0.5; best = i } }
+  if (best < 0) { s.done = 1; return }
+  var opts = g[best], total = 0
+  for (var a = 0; a < opts.length; a++) total += tl[opts[a]].w
+  var r = Math.random() * total, pick = opts[0]
+  for (var b = 0; b < opts.length; b++) { r -= tl[opts[b]].w; if (r <= 0) { pick = opts[b]; break } }
+  g[best] = [pick]
+  var stack = [best]
+  while (stack.length) {
+    var at = stack.pop(), x = at % n, y = (at / n) | 0
+    var dirs = [[0, -1, 0, 2], [1, 0, 1, 3], [0, 1, 2, 0], [-1, 0, 3, 1]]
+    for (var d = 0; d < 4; d++) {
+      var nx = x + dirs[d][0], ny = y + dirs[d][1]
+      if (nx < 0 || ny < 0 || nx >= n || ny >= n) continue
+      var ni = ny * n + nx, mine = g[at], theirs = g[ni]
+      var keep = theirs.filter(function (o) { return mine.some(function (m) { return tl[m].e[dirs[d][2]] === tl[o].e[dirs[d][3]] }) })
+      if (keep.length === theirs.length) continue
+      if (!keep.length) { s.grid = s.fresh(); s.starts++; return }
+      g[ni] = keep
+      stack.push(ni)
+    }
+  }
+}
+}
+  }
+  function render(ctx, state, t, W, H) {
+{
+var s = state, n = s.k.cells, g = s.grid, tl = s.tiles, z = W / n
+ctx.fillStyle = '#10140f'
+ctx.fillRect(0, 0, W, H)
+for (var i = 0; i < g.length; i++) {
+  var x = (i % n) * z, y = ((i / n) | 0) * z
+  if (g[i].length > 1) {
+    var fog = 20 + (1 - g[i].length / tl.length) * 40
+    ctx.fillStyle = 'rgb(' + (fog | 0) + ',' + (fog + 6 | 0) + ',' + (fog + 4 | 0) + ')'
+    ctx.fillRect(x + 1, y + 1, z - 2, z - 2)
+    continue
+  }
+  var t0 = tl[g[i][0]], e = t0.e
+  ctx.fillStyle = (i * 7) % 3 ? '#4f8a3c' : '#56923f'
+  ctx.fillRect(x, y, z, z)
+  ctx.fillStyle = '#56565c'
+  var m = z / 2, wd = z * 0.36
+  if (e[0] === 'r') ctx.fillRect(x + m - wd / 2, y, wd, m + wd / 2)
+  if (e[2] === 'r') ctx.fillRect(x + m - wd / 2, y + m - wd / 2, wd, m + wd / 2)
+  if (e[1] === 'r') ctx.fillRect(x + m - wd / 2, y + m - wd / 2, m + wd / 2, wd)
+  if (e[3] === 'r') ctx.fillRect(x, y + m - wd / 2, m + wd / 2, wd)
+  if (t0.name === 'house') {
+    var hue = (i * 47) % 360
+    ctx.fillStyle = 'hsl(' + hue + ',35%,55%)'
+    ctx.fillRect(x + z * 0.18, y + z * 0.2, z * 0.64, z * 0.6)
+    ctx.fillStyle = 'hsl(' + hue + ',45%,30%)'
+    ctx.fillRect(x + z * 0.18, y + z * 0.2, z * 0.64, z * 0.18)
+    ctx.fillStyle = '#f2d98a'
+    ctx.fillRect(x + z * 0.3, y + z * 0.5, z * 0.12, z * 0.12)
+    ctx.fillRect(x + z * 0.58, y + z * 0.5, z * 0.12, z * 0.12)
+  }
+  if (t0.name === 'tree') {
+    ctx.fillStyle = '#2c5e2a'
+    ctx.beginPath()
+    ctx.arc(x + m, y + m, z * 0.3, 0, Math.PI * 2)
+    ctx.fill()
+  }
+}
+}
+  }
+  var state = setup(ctx, W, H) || {}, t = 0
+  var steps = Math.max(1, Math.min(32, (state.steps | 0) || 1))
+  function frame() { for (var i = 0; i < steps; i++) update(state, t, W, H); render(ctx, state, t, W, H); t++; requestAnimationFrame(frame) }
+  frame()
+})()
+</script></body></html>
