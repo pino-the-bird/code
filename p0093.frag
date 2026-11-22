@@ -1,26 +1,24 @@
-// simplified kiwi mug lower
+// Breathing Lower Mug
 // SPDX-License-Identifier: CC-BY-NC-SA-4.0
 // Copyright (c) 2026 pino (https://pino-the-bird.github.io/code/p0093.html)
 // https://creativecommons.org/licenses/by-nc-sa/4.0/
 // uniforms: vec3 iResolution, float iTime, vec4 iMouse, int iFrame
 
-const float P_w0_speed = 0.235;
-const float P_w1_amount = 0.229;
-const float P_w1_size = 0.398;
-const float P_a_size = 0.9;
-const float P_b_size = 0.643;
-const float P_b_round = 0.084;
-const float P_b_soft = 0.239;
-const float P_s_orbit = 0.128;
-const float P_s_distance = 4.571;
-const float P_s_steps = 74.229;
-const float P_shift = 0.0;
-const float P_spread = 0.807;
-const float P_glow = 0.332;
-const float P_exposure = 0.975;
-const float P_grain = 0.01;
-const float P_vignette = 0.304;
-const float P_speed = 0.473;
+const float P_w0_speed = 0.3;
+const float P_w1_amount = 0.15;
+const float P_w1_size = 0.796;
+const float P_a_size = 1.018;
+const float P_a_round = 0.204;
+const float P_b_size = 0.9;
+const float P_b_round = 0.2;
+const float P_s_zoom = 2.5;
+const float P_shift = 0.267;
+const float P_spread = 1.314;
+const float P_glow = 0.3;
+const float P_exposure = 1.0;
+const float P_grain = 0.02;
+const float P_vignette = 0.246;
+const float P_speed = 0.612;
 
 float PAL_T = 0.0;
 
@@ -49,7 +47,7 @@ float fbm(vec3 p, float layers) {
 float smin(float a, float b, float k) { float h = clamp(0.5 + 0.5 * (b - a) / k, 0.0, 1.0); return mix(b, a, h) - k * h * (1.0 - h); }
 
 
-vec3 pal(float x) { return vec3(0.2, 0.4, 0.5) + vec3(0.3, 0.3, 0.35) * cos(6.28318 * (vec3(1.0, 1.0, 1.0) * x * P_spread + vec3(0.5, 0.6, 0.7) + P_shift + PAL_T * 0.04)); }
+vec3 pal(float x) { return vec3(0.6, 0.57, 0.53) + vec3(0.35, 0.33, 0.3) * cos(6.28318 * (vec3(1.0, 1.0, 1.0) * x * P_spread + vec3(0.0, 0.03, 0.06) + P_shift + PAL_T * 0.04)); }
 
 vec3 warp0(vec3 p, float t) {
   p.z += t * P_w0_speed;
@@ -62,7 +60,7 @@ vec3 warp1(vec3 p, float t) {
 }
 
 float formA(vec3 p) {
-  return length(p) - P_a_size;
+  vec3 q = abs(p) - vec3(P_a_size); return length(max(q, 0.0)) + min(max(q.x, max(q.y, q.z)), 0.0) - P_a_round;
 }
 
 float formB(vec3 p) {
@@ -75,46 +73,17 @@ float field(vec3 p, float t) {
   p = warp1(p, t);
   float a = formA(p);
   float b = formB(p);
-  a = smin(a, b, P_b_soft);
-  a = max(a, length(q) - 1.8);
+  a = max(a, -b);
   return a;
 }
 
 vec3 look(vec2 uv, float t) {
-  float a = iTime * P_s_orbit;
-  vec3 ro = vec3(sin(a) * P_s_distance, 0.6 * sin(a * 0.7), -cos(a) * P_s_distance);
-  vec3 fw = normalize(-ro);
-  vec3 rt = normalize(cross(vec3(0.0, 1.0, 0.0), fw));
-  vec3 up = cross(fw, rt);
-  vec3 rd = normalize(uv.x * rt + uv.y * up + 1.6 * fw);
-  float z = 0.0;
-  float near = 1e9;
-  float k = 0.0;
-  float hit = 0.0;
-  vec3 p = ro;
-  for (int i = 0; i < 128; i++) {
-    if (float(i) >= P_s_steps) break;
-    p = ro + rd * z;
-    float d = field(p, t);
-    near = min(near, d);
-    if (d < 0.0015 * (1.0 + z)) { hit = 1.0; break; }
-    z += d * 0.6;
-    k += 1.0;
-    if (z > 24.0) break;
-  }
-  vec3 bg = pal(uv.y * 0.25 + 0.6) * 0.07 + pal(0.25) * P_glow * 0.5 * exp(-max(near, 0.0) * 3.0);
-  if (hit < 0.5) return bg;
-  vec2 e = vec2(0.0015, 0.0);
-  vec3 n = normalize(vec3(field(p + e.xyy, t) - field(p - e.xyy, t), field(p + e.yxy, t) - field(p - e.yxy, t), field(p + e.yyx, t) - field(p - e.yyx, t)));
-  vec3 l = normalize(vec3(0.6, 0.8, -0.5));
-  float dif = max(dot(n, l), 0.0);
-  float rim = pow(1.0 - max(dot(n, -rd), 0.0), 3.0);
-  float occ = 1.0 - k / P_s_steps;
-  float v = (z * 0.12);
-  // (lit more kindly: the occlusion of a warped form, felt for in short steps, put most solids in the dark)
-  float spec = pow(max(dot(reflect(rd, n), l), 0.0), 24.0);
-  vec3 col = pal(v) * (0.2 + 0.8 * dif) * (0.6 + 0.4 * occ) + pal(v + 0.5) * 0.15 * (0.5 - 0.5 * dot(n, l)) + pal(v + 0.3) * rim * (0.25 + P_glow) + vec3(spec) * 0.5;
-  return mix(col, bg, 1.0 - exp(-0.004 * z * z));
+  vec3 p = vec3(uv * P_s_zoom, 0.0);
+  float d = field(p, t);
+  float v = (length(uv) * 0.6);
+  vec3 col = pal(v) * smoothstep(0.012 * P_s_zoom, -0.012 * P_s_zoom, d);
+  col += pal(v + 0.15) * P_glow * exp(-abs(d) * 5.0 / P_s_zoom);
+  return col + pal(v + 0.5) * 0.04;
 }
 
 void mainImage(out vec4 fragColor, in vec2 fragCoord) {
@@ -127,7 +96,7 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
     col += look(uv, t);
   }
   vec3 c = col / 1.0 * P_exposure;
-  c = clamp((c * (2.51 * c + 0.03)) / (c * (2.43 * c + 0.59) + 0.14), 0.0, 1.0);
+  c = c / (1.0 + c);
   vec2 q = fragCoord / iResolution.xy - 0.5;
   c *= 1.0 - P_vignette * dot(q, q) * 2.0;
   c += (hash(fragCoord + fract(iTime) * 91.7) - 0.5) * P_grain;
