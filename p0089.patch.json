@@ -1,49 +1,46 @@
 {
   "space": {
     "part": "kaleidoscope",
-    "zoom": 2.512,
-    "slices": 7.043
+    "zoom": 2,
+    "slices": 6
   },
   "warps": [
     {
+      "part": "spin",
+      "speed": 0.4
+    },
+    {
       "part": "breathe",
-      "amount": 0.218,
+      "amount": 0.3,
       "size": 1
-    },
-    {
-      "part": "twist",
-      "amount": 0.8
-    },
-    {
-      "part": "drift",
-      "speed": 0.807
-    },
-    {
-      "part": "turbulence",
-      "amount": 0.465,
-      "layers": 3.662,
-      "size": 1.5
     }
   ],
   "form": {
+    "part": "torus",
+    "size": 1,
+    "thickness": 0.3
+  },
+  "with": {
     "part": "clouds",
-    "scale": 3.286,
-    "layers": 3.676,
-    "cover": 0.611
+    "join": "melt",
+    "scale": 1.5,
+    "layers": 4,
+    "cover": 0.5,
+    "soft": 0.3
   },
   "colour": {
     "palette": "neon",
     "by": "depth",
-    "shift": 0,
-    "spread": 1.5,
-    "glow": 0.728
+    "shift": 0.2,
+    "spread": 2,
+    "glow": 1.2
   },
   "finish": {
     "tone": "none",
-    "exposure": 1.059,
-    "grain": 0.011,
-    "vignette": 0.293
+    "exposure": 1,
+    "grain": 0,
+    "vignette": 0
   },
-  "speed": 0.515,
+  "speed": 0.8,
   "samples": 1
 }
