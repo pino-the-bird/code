@@ -1,25 +1,27 @@
-// neon market torus kaleidoscope
+// Neon Market Lanterns
 // SPDX-License-Identifier: CC-BY-NC-SA-4.0
 // Copyright (c) 2026 pino (https://pino-the-bird.github.io/code/p0098.html)
 // https://creativecommons.org/licenses/by-nc-sa/4.0/
 // uniforms: vec3 iResolution, float iTime, vec4 iMouse, int iFrame
 
 const float P_w0_cell = 2.5;
-const float P_w1_speed = 0.818;
-const float P_w2_speed = 0.813;
-const float P_w3_size = 2.025;
-const float P_w3_layers = 4.0;
-const float P_w3_amount = 0.5;
-const float P_a_size = 0.991;
-const float P_a_thickness = 0.3;
-const float P_s_slices = 6.775;
+const float P_w1_speed = 0.3;
+const float P_w2_amount = 0.2;
+const float P_w2_size = 1.0;
+const float P_w3_speed = 0.6;
+const float P_a_size = 0.8;
+const float P_a_thickness = 0.2;
+const float P_b_scale = 2.0;
+const float P_b_cover = 0.5;
+const float P_b_soft = 0.3;
+const float P_s_slices = 8.0;
 const float P_s_zoom = 2.5;
-const float P_shift = 0.151;
-const float P_spread = 2.074;
-const float P_glow = 0.567;
-const float P_exposure = 0.723;
-const float P_grain = 0.024;
-const float P_vignette = 0.286;
+const float P_shift = 0.0;
+const float P_spread = 1.0;
+const float P_glow = 0.6;
+const float P_exposure = 0.7;
+const float P_grain = 0.02;
+const float P_vignette = 0.2;
 const float P_speed = 0.4;
 
 float PAL_T = 0.0;
@@ -49,7 +51,7 @@ float fbm(vec3 p, float layers) {
 float smin(float a, float b, float k) { float h = clamp(0.5 + 0.5 * (b - a) / k, 0.0, 1.0); return mix(b, a, h) - k * h * (1.0 - h); }
 
 
-vec3 pal(float x) { return vec3(0.5, 0.5, 0.5) + vec3(0.5, 0.5, 0.5) * cos(6.28318 * (vec3(1.0, 1.0, 1.0) * x * P_spread + vec3(0.0, 0.33, 0.67) + P_shift + PAL_T * 0.04)); }
+vec3 pal(float x) { return vec3(0.5, 0.5, 0.5) + vec3(0.5, 0.5, 0.5) * cos(6.28318 * (vec3(2.0, 1.0, 0.0) * x * P_spread + vec3(0.5, 0.2, 0.25) + P_shift + PAL_T * 0.04)); }
 
 vec3 warp0(vec3 p, float t) {
   p = abs(mod(p + 1.5 * P_w0_cell, 2.0 * P_w0_cell) - P_w0_cell) - 0.5 * P_w0_cell;
@@ -62,17 +64,21 @@ vec3 warp1(vec3 p, float t) {
 }
 
 vec3 warp2(vec3 p, float t) {
-  p.z += t * P_w2_speed;
+  p *= 1.0 + P_w2_amount * sin(t * 2.0 - length(p) * P_w2_size);
   return p;
 }
 
 vec3 warp3(vec3 p, float t) {
-  float f = P_w3_size; for (int i = 0; i < 6; i++) { if (float(i) >= P_w3_layers) break; p += P_w3_amount * sin(p.zxy * f + t + float(i)) / f; p.xy = rot(0.7) * p.xy; f *= 1.7; }
+  p.z += t * P_w3_speed;
   return p;
 }
 
 float formA(vec3 p) {
   vec2 q = vec2(length(p.xz) - P_a_size, p.y); return length(q) - P_a_thickness;
+}
+
+float formB(vec3 p) {
+  vec3 q = p * P_b_scale; return (abs(dot(cos(TURN * q), sin(1.618 * TURN * q))) * 0.4 - P_b_cover * 0.4) / P_b_scale;
 }
 
 float field(vec3 p, float t) {
@@ -82,6 +88,8 @@ float field(vec3 p, float t) {
   p = warp2(p, t);
   p = warp3(p, t);
   float a = formA(p);
+  float b = formB(p);
+  a = smin(a, b, P_b_soft);
   return a;
 }
 
