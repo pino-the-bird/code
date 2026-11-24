@@ -1,4 +1,4 @@
-// Neon Market Lanterns
+// Ghost Line Whisper  sixpetal market night
 // SPDX-License-Identifier: CC-BY-NC-SA-4.0
 // Copyright (c) 2026 pino (https://pino-the-bird.github.io/code/p0098.html)
 // https://creativecommons.org/licenses/by-nc-sa/4.0/
@@ -14,8 +14,9 @@ const float P_a_thickness = 0.2;
 const float P_b_scale = 2.0;
 const float P_b_cover = 0.5;
 const float P_b_soft = 0.3;
-const float P_s_slices = 8.0;
-const float P_s_zoom = 2.5;
+const float P_s_distance = 2.383;
+const float P_s_steps = 34.213;
+const float P_s_density = 1.275;
 const float P_shift = 0.0;
 const float P_spread = 1.0;
 const float P_glow = 0.6;
@@ -90,19 +91,31 @@ float field(vec3 p, float t) {
   float a = formA(p);
   float b = formB(p);
   a = smin(a, b, P_b_soft);
+  a = max(a, length(q) - 1.6);
   return a;
 }
 
 vec3 look(vec2 uv, float t) {
-  float n = 6.28318 / floor(P_s_slices);
-  float a = abs(mod(atan(uv.y, uv.x), n) - 0.5 * n);
-  vec2 q = vec2(cos(a), sin(a)) * length(uv);
-  vec3 p = vec3(q * P_s_zoom, 0.0);
-  float d = field(p, t);
-  float v = (abs(atan(uv.y, uv.x)) / 6.28318);
-  vec3 col = pal(v) * smoothstep(0.012 * P_s_zoom, -0.012 * P_s_zoom, d);
-  col += pal(v + 0.15) * P_glow * exp(-abs(d) * 5.0 / P_s_zoom);
-  return col + pal(v + 0.5) * 0.04;
+  vec3 ro = vec3(0.0, 0.0, -P_s_distance);
+  vec3 rd = normalize(vec3(uv, 1.4));
+  // (it turns slowly whatever else it does: a cloud of a gyroid with a twist in it held still, and every shader moves)
+  ro.xz = rot(t * 0.25) * ro.xz;
+  rd.xz = rot(t * 0.25) * rd.xz;
+  vec3 col = vec3(0.0);
+  float z = 0.0;
+  for (int i = 0; i < 96; i++) {
+    if (float(i) >= P_s_steps) break;
+    vec3 p = ro + rd * z;
+    float d = field(p, t);
+    float s = 0.006 + abs(d) * 0.45;
+    float v = (abs(atan(p.y, p.x)) / 6.28318);
+    col += pal(v) * P_s_density / s;
+    z += s;
+  }
+  // (squared, so the light gathers in bright cores with dark between, the way glow through a volume looks: summed flat
+  // it came out a white wash)
+  col *= 0.0012 * (0.35 + 0.65 * P_glow) * 36.0 / P_s_steps;
+  return col * col * 1.6;
 }
 
 void mainImage(out vec4 fragColor, in vec2 fragCoord) {
