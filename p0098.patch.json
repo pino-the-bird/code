@@ -1,0 +1,47 @@
+{
+  "space": {
+    "part": "kaleidoscope",
+    "zoom": 2.5,
+    "slices": 6.775
+  },
+  "warps": [
+    {
+      "part": "repeat",
+      "cell": 2.5
+    },
+    {
+      "part": "spin",
+      "speed": 0.818
+    },
+    {
+      "part": "drift",
+      "speed": 0.813
+    },
+    {
+      "part": "turbulence",
+      "amount": 0.5,
+      "layers": 4,
+      "size": 2.025
+    }
+  ],
+  "form": {
+    "part": "torus",
+    "size": 0.991,
+    "thickness": 0.3
+  },
+  "colour": {
+    "palette": "spectrum",
+    "by": "angle",
+    "shift": 0.151,
+    "spread": 2.074,
+    "glow": 0.567
+  },
+  "finish": {
+    "tone": "soft",
+    "exposure": 0.723,
+    "grain": 0.024,
+    "vignette": 0.286
+  },
+  "speed": 0.4,
+  "samples": 1
+}
