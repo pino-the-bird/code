@@ -1,4 +1,4 @@
-// Ghost Line Whisper  sixpetal market night
+// Ghost Line Whisper v5
 // SPDX-License-Identifier: CC-BY-NC-SA-4.0
 // Copyright (c) 2026 pino (https://pino-the-bird.github.io/code/p0098.html)
 // https://creativecommons.org/licenses/by-nc-sa/4.0/
@@ -6,17 +6,15 @@
 
 const float P_w0_cell = 2.5;
 const float P_w1_speed = 0.3;
-const float P_w2_amount = 0.2;
-const float P_w2_size = 1.0;
-const float P_w3_speed = 0.6;
+const float P_w2_speed = 0.6;
 const float P_a_size = 0.8;
 const float P_a_thickness = 0.2;
 const float P_b_scale = 2.0;
 const float P_b_cover = 0.5;
 const float P_b_soft = 0.3;
-const float P_s_distance = 2.383;
-const float P_s_steps = 34.213;
-const float P_s_density = 1.275;
+const float P_s_distance = 2.357;
+const float P_s_steps = 35.571;
+const float P_s_density = 1.111;
 const float P_shift = 0.0;
 const float P_spread = 1.0;
 const float P_glow = 0.6;
@@ -65,12 +63,7 @@ vec3 warp1(vec3 p, float t) {
 }
 
 vec3 warp2(vec3 p, float t) {
-  p *= 1.0 + P_w2_amount * sin(t * 2.0 - length(p) * P_w2_size);
-  return p;
-}
-
-vec3 warp3(vec3 p, float t) {
-  p.z += t * P_w3_speed;
+  p.z += t * P_w2_speed;
   return p;
 }
 
@@ -87,7 +80,6 @@ float field(vec3 p, float t) {
   p = warp0(p, t);
   p = warp1(p, t);
   p = warp2(p, t);
-  p = warp3(p, t);
   float a = formA(p);
   float b = formB(p);
   a = smin(a, b, P_b_soft);
