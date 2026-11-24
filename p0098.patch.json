@@ -2,7 +2,7 @@
   "space": {
     "part": "kaleidoscope",
     "zoom": 2.5,
-    "slices": 6.775
+    "slices": 8
   },
   "warps": [
     {
@@ -11,36 +11,42 @@
     },
     {
       "part": "spin",
-      "speed": 0.818
+      "speed": 0.3
+    },
+    {
+      "part": "breathe",
+      "amount": 0.2,
+      "size": 1
     },
     {
       "part": "drift",
-      "speed": 0.813
-    },
-    {
-      "part": "turbulence",
-      "amount": 0.5,
-      "layers": 4,
-      "size": 2.025
+      "speed": 0.6
     }
   ],
   "form": {
     "part": "torus",
-    "size": 0.991,
-    "thickness": 0.3
+    "size": 0.8,
+    "thickness": 0.2
+  },
+  "with": {
+    "part": "weave",
+    "join": "melt",
+    "scale": 2,
+    "cover": 0.5,
+    "soft": 0.3
   },
   "colour": {
-    "palette": "spectrum",
+    "palette": "neon",
     "by": "angle",
-    "shift": 0.151,
-    "spread": 2.074,
-    "glow": 0.567
+    "shift": 0,
+    "spread": 1,
+    "glow": 0.6
   },
   "finish": {
     "tone": "soft",
-    "exposure": 0.723,
-    "grain": 0.024,
-    "vignette": 0.286
+    "exposure": 0.7,
+    "grain": 0.02,
+    "vignette": 0.2
   },
   "speed": 0.4,
   "samples": 1
