@@ -1,8 +1,9 @@
 {
   "space": {
-    "part": "kaleidoscope",
-    "zoom": 2.5,
-    "slices": 8
+    "part": "cloud",
+    "distance": 2.383,
+    "steps": 34.213,
+    "density": 1.275
   },
   "warps": [
     {
