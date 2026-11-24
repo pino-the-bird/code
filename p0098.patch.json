@@ -1,9 +1,7 @@
 {
   "space": {
-    "part": "cloud",
-    "distance": 2.357,
-    "steps": 35.571,
-    "density": 1.111
+    "part": "tunnel",
+    "zoom": 0.816
   },
   "warps": [
     {
@@ -17,6 +15,11 @@
     {
       "part": "drift",
       "speed": 0.6
+    },
+    {
+      "part": "breathe",
+      "amount": 0.2,
+      "size": 1
     }
   ],
   "form": {
