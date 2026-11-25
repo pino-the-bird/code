@@ -1,25 +1,24 @@
-// Melted Chocolate Line
+// Subtle Glint Phrase
 // SPDX-License-Identifier: CC-BY-NC-SA-4.0
 // Copyright (c) 2026 pino (https://pino-the-bird.github.io/code/p0105.html)
 // https://creativecommons.org/licenses/by-nc-sa/4.0/
 // uniforms: vec3 iResolution, float iTime, vec4 iMouse, int iFrame
 
-const float P_w0_speed = 0.4;
-const float P_w1_amount = 0.2;
-const float P_w1_size = 2.5;
-const float P_w2_amount = 0.12;
-const float P_w2_size = 1.8;
-const float P_w3_cell = 2.0;
-const float P_a_height = 0.12;
-const float P_a_size = 0.7;
-const float P_s_slices = 6.0;
-const float P_s_zoom = 1.6;
+const float P_w0_speed = 0.3;
+const float P_w1_speed = 0.2;
+const float P_w2_cell = 2.0;
+const float P_w3_amount = 0.1;
+const float P_w3_size = 1.5;
+const float P_a_height = 0.1;
+const float P_a_size = 0.6;
+const float P_s_zoom = 1.688;
+const float P_s_arms = 2.385;
 const float P_shift = 0.0;
 const float P_spread = 1.0;
-const float P_glow = 0.3;
+const float P_glow = 0.2;
 const float P_exposure = 1.0;
 const float P_grain = 0.02;
-const float P_vignette = 0.3;
+const float P_vignette = 0.2;
 const float P_speed = 0.5;
 
 float PAL_T = 0.0;
@@ -57,17 +56,17 @@ vec3 warp0(vec3 p, float t) {
 }
 
 vec3 warp1(vec3 p, float t) {
-  p += P_w1_amount * sin(p.yzx * P_w1_size + t);
+  p.z += t * P_w1_speed;
   return p;
 }
 
 vec3 warp2(vec3 p, float t) {
-  p *= 1.0 + P_w2_amount * sin(t * 2.0 - length(p) * P_w2_size);
+  p = abs(mod(p + 1.5 * P_w2_cell, 2.0 * P_w2_cell) - P_w2_cell) - 0.5 * P_w2_cell;
   return p;
 }
 
 vec3 warp3(vec3 p, float t) {
-  p = abs(mod(p + 1.5 * P_w3_cell, 2.0 * P_w3_cell) - P_w3_cell) - 0.5 * P_w3_cell;
+  p *= 1.0 + P_w3_amount * sin(t * 2.0 - length(p) * P_w3_size);
   return p;
 }
 
@@ -86,15 +85,16 @@ float field(vec3 p, float t) {
 }
 
 vec3 look(vec2 uv, float t) {
-  float n = 6.28318 / floor(P_s_slices);
-  float a = abs(mod(atan(uv.y, uv.x), n) - 0.5 * n);
-  vec2 q = vec2(cos(a), sin(a)) * length(uv);
-  vec3 p = vec3(q * P_s_zoom, 0.0);
+  float r = max(length(uv), 1e-4);
+  // (tiled, so a form recurs all the way in and round: one form at the middle was missed by nearly every pixel)
+  // (and each tile the mirror of the next, so they meet: cut off at the edge of each, his fourth from the engine, p0029,
+  // went up with a hard line out to the right and a ring at every tile)
+  vec3 p = vec3(abs(mod(log(r) * P_s_zoom - t * 0.3 + 2.0, 4.0) - 2.0) - 1.0, abs(mod(atan(uv.y, uv.x) / 3.14159 * floor(P_s_arms) + 2.0, 4.0) - 2.0) - 1.0, 0.0) * 1.5;
   float d = field(p, t);
   float v = (d * 2.0);
-  vec3 col = pal(v) * smoothstep(0.012 * P_s_zoom, -0.012 * P_s_zoom, d);
-  col += pal(v + 0.15) * P_glow * exp(-abs(d) * 5.0 / P_s_zoom);
-  return col + pal(v + 0.5) * 0.04;
+  vec3 col = pal(v) * smoothstep(0.02, -0.02, d);
+  col += pal(v + 0.15) * P_glow * exp(-abs(d) * 4.0);
+  return (col + pal(v + 0.5) * 0.04) * smoothstep(0.0, 0.15, r);
 }
 
 void mainImage(out vec4 fragColor, in vec2 fragCoord) {
