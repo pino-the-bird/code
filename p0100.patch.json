@@ -1,0 +1,49 @@
+{
+  "space": {
+    "part": "kaleidoscope",
+    "zoom": 1.978,
+    "slices": 7.159
+  },
+  "warps": [
+    {
+      "part": "repeat",
+      "cell": 3.492
+    },
+    {
+      "part": "ripple",
+      "amount": 0.3,
+      "size": 2.142
+    },
+    {
+      "part": "twist",
+      "amount": 0.8
+    }
+  ],
+  "form": {
+    "part": "cells",
+    "scale": 2.663,
+    "edge": 0.08
+  },
+  "with": {
+    "part": "shells",
+    "join": "add",
+    "spacing": 0.484,
+    "thickness": 0.06,
+    "soft": 0.3
+  },
+  "colour": {
+    "palette": "ember",
+    "by": "field",
+    "shift": 0.116,
+    "spread": 0.86,
+    "glow": 0.6
+  },
+  "finish": {
+    "tone": "filmic",
+    "exposure": 1,
+    "grain": 0.027,
+    "vignette": 0.25
+  },
+  "speed": 0.447,
+  "samples": 1
+}
