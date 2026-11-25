@@ -1,0 +1,54 @@
+{
+  "space": {
+    "part": "kaleidoscope",
+    "zoom": 1.625,
+    "slices": 6
+  },
+  "warps": [
+    {
+      "part": "repeat",
+      "cell": 2.747
+    },
+    {
+      "part": "breathe",
+      "amount": 0.1,
+      "size": 1.5
+    },
+    {
+      "part": "spin",
+      "speed": 0.793
+    },
+    {
+      "part": "drift",
+      "speed": 0.451
+    }
+  ],
+  "form": {
+    "part": "waves",
+    "size": 0.5,
+    "height": 0.163
+  },
+  "with": {
+    "part": "clouds",
+    "join": "add",
+    "scale": 1.866,
+    "layers": 4.162,
+    "cover": 0.535,
+    "soft": 0.173
+  },
+  "colour": {
+    "palette": "neon",
+    "by": "field",
+    "shift": 0,
+    "spread": 1,
+    "glow": 0.401
+  },
+  "finish": {
+    "tone": "filmic",
+    "exposure": 1.175,
+    "grain": 0.021,
+    "vignette": 0.428
+  },
+  "speed": 0.5,
+  "samples": 1
+}
