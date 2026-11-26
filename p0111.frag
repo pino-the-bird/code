@@ -5,21 +5,22 @@
 // uniforms: vec3 iResolution, float iTime, vec4 iMouse, int iFrame
 
 const float P_w0_amount = 0.2;
-const float P_w0_size = 2.0;
-const float P_w1_cell = 2.5;
-const float P_w2_speed = 0.3;
-const float P_a_height = 0.127;
-const float P_a_size = 0.5;
-const float P_s_distance = 2.328;
-const float P_s_steps = 38.347;
-const float P_s_density = 1.196;
-const float P_shift = 0.08;
+const float P_w0_size = 1.5;
+const float P_w1_amount = 0.255;
+const float P_w1_size = 2.0;
+const float P_w2_scale = 1.2;
+const float P_w2_amount = 0.147;
+const float P_w3_cell = 2.5;
+const float P_a_height = 0.027;
+const float P_a_size = 0.686;
+const float P_s_zoom = 2.765;
+const float P_shift = 0.015;
 const float P_spread = 1.0;
-const float P_glow = 0.6;
+const float P_glow = 0.636;
 const float P_exposure = 0.96;
-const float P_grain = 0.01;
-const float P_vignette = 0.32;
-const float P_speed = 0.6;
+const float P_grain = 0.0;
+const float P_vignette = 0.269;
+const float P_speed = 0.522;
 
 float PAL_T = 0.0;
 
@@ -48,7 +49,7 @@ float fbm(vec3 p, float layers) {
 float smin(float a, float b, float k) { float h = clamp(0.5 + 0.5 * (b - a) / k, 0.0, 1.0); return mix(b, a, h) - k * h * (1.0 - h); }
 
 
-vec3 pal(float x) { return vec3(0.5, 0.3, 0.2) + vec3(0.5, 0.35, 0.25) * cos(6.28318 * (vec3(1.0, 1.0, 1.0) * x * P_spread + vec3(0.0, 0.1, 0.2) + P_shift + PAL_T * 0.04)); }
+vec3 pal(float x) { return vec3(0.5, 0.5, 0.5) + vec3(0.5, 0.5, 0.5) * cos(6.28318 * (vec3(2.0, 1.0, 0.0) * x * P_spread + vec3(0.5, 0.2, 0.25) + P_shift + PAL_T * 0.04)); }
 
 vec3 warp0(vec3 p, float t) {
   p *= 1.0 + P_w0_amount * sin(t * 2.0 - length(p) * P_w0_size);
@@ -56,12 +57,17 @@ vec3 warp0(vec3 p, float t) {
 }
 
 vec3 warp1(vec3 p, float t) {
-  p = abs(mod(p + 1.5 * P_w1_cell, 2.0 * P_w1_cell) - P_w1_cell) - 0.5 * P_w1_cell;
+  p += P_w1_amount * sin(p.yzx * P_w1_size + t);
   return p;
 }
 
 vec3 warp2(vec3 p, float t) {
-  p.xy = rot(t * P_w2_speed) * p.xy;
+  vec3 q = p * P_w2_scale + t * 0.3; p += P_w2_amount * (vec3(noise(q), noise(q + 17.1), noise(q - 9.3)) - 0.5);
+  return p;
+}
+
+vec3 warp3(vec3 p, float t) {
+  p = abs(mod(p + 1.5 * P_w3_cell, 2.0 * P_w3_cell) - P_w3_cell) - 0.5 * P_w3_cell;
   return p;
 }
 
@@ -74,32 +80,18 @@ float field(vec3 p, float t) {
   p = warp0(p, t);
   p = warp1(p, t);
   p = warp2(p, t);
+  p = warp3(p, t);
   float a = formA(p);
-  a = max(a, length(q) - 1.6);
   return a;
 }
 
 vec3 look(vec2 uv, float t) {
-  vec3 ro = vec3(0.0, 0.0, -P_s_distance);
-  vec3 rd = normalize(vec3(uv, 1.4));
-  // (it turns slowly whatever else it does: a cloud of a gyroid with a twist in it held still, and every shader moves)
-  ro.xz = rot(t * 0.25) * ro.xz;
-  rd.xz = rot(t * 0.25) * rd.xz;
-  vec3 col = vec3(0.0);
-  float z = 0.0;
-  for (int i = 0; i < 96; i++) {
-    if (float(i) >= P_s_steps) break;
-    vec3 p = ro + rd * z;
-    float d = field(p, t);
-    float s = 0.006 + abs(d) * 0.45;
-    float v = (d * 1.5);
-    col += pal(v) * P_s_density / s;
-    z += s;
-  }
-  // (squared, so the light gathers in bright cores with dark between, the way glow through a volume looks: summed flat
-  // it came out a white wash)
-  col *= 0.0012 * (0.35 + 0.65 * P_glow) * 36.0 / P_s_steps;
-  return col * col * 1.6;
+  vec3 p = vec3(uv * P_s_zoom, 0.0);
+  float d = field(p, t);
+  float v = (d * 2.0);
+  vec3 col = pal(v) * smoothstep(0.012 * P_s_zoom, -0.012 * P_s_zoom, d);
+  col += pal(v + 0.15) * P_glow * exp(-abs(d) * 5.0 / P_s_zoom);
+  return col + pal(v + 0.5) * 0.04;
 }
 
 void mainImage(out vec4 fragColor, in vec2 fragCoord) {
