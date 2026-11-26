@@ -1,0 +1,46 @@
+{
+  "space": {
+    "part": "flat",
+    "zoom": 2.332
+  },
+  "warps": [
+    {
+      "part": "melt",
+      "amount": 0.453,
+      "scale": 0.642
+    },
+    {
+      "part": "breathe",
+      "amount": 0.2,
+      "size": 2
+    },
+    {
+      "part": "repeat",
+      "cell": 1.819
+    },
+    {
+      "part": "spin",
+      "speed": 0.397
+    }
+  ],
+  "form": {
+    "part": "waves",
+    "size": 0.5,
+    "height": 0.127
+  },
+  "colour": {
+    "palette": "ember",
+    "by": "field",
+    "shift": 0.078,
+    "spread": 1,
+    "glow": 0.6
+  },
+  "finish": {
+    "tone": "soft",
+    "exposure": 0.957,
+    "grain": 0.011,
+    "vignette": 0.32
+  },
+  "speed": 0.592,
+  "samples": 1
+}
