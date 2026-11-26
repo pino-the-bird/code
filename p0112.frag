@@ -4,22 +4,23 @@
 // https://creativecommons.org/licenses/by-nc-sa/4.0/
 // uniforms: vec3 iResolution, float iTime, vec4 iMouse, int iFrame
 
-const float P_w0_cell = 2.5;
-const float P_w1_speed = 0.432;
-const float P_w2_amount = 0.316;
-const float P_w2_size = 3.0;
-const float P_w3_amount = 0.164;
-const float P_w3_size = 2.53;
-const float P_a_height = 0.15;
-const float P_a_size = 0.5;
-const float P_s_slices = 8.0;
-const float P_s_zoom = 1.868;
+const float P_w0_amount = 0.212;
+const float P_w0_size = 1.495;
+const float P_w1_amount = 0.252;
+const float P_w1_size = 2.152;
+const float P_w2_scale = 1.095;
+const float P_w2_amount = 0.5;
+const float P_a_height = 0.2;
+const float P_a_size = 1.031;
+const float P_b_scale = 2.986;
+const float P_b_edge = 0.02;
+const float P_s_zoom = 3.49;
 const float P_shift = 0.0;
-const float P_spread = 0.789;
-const float P_glow = 0.6;
-const float P_exposure = 1.036;
-const float P_grain = 0.02;
-const float P_vignette = 0.3;
+const float P_spread = 0.867;
+const float P_glow = 0.612;
+const float P_exposure = 0.944;
+const float P_grain = 0.016;
+const float P_vignette = 0.176;
 const float P_speed = 0.5;
 
 float PAL_T = 0.0;
@@ -49,25 +50,20 @@ float fbm(vec3 p, float layers) {
 float smin(float a, float b, float k) { float h = clamp(0.5 + 0.5 * (b - a) / k, 0.0, 1.0); return mix(b, a, h) - k * h * (1.0 - h); }
 
 
-vec3 pal(float x) { return vec3(0.5, 0.5, 0.5) + vec3(0.5, 0.5, 0.5) * cos(6.28318 * (vec3(2.0, 1.0, 0.0) * x * P_spread + vec3(0.5, 0.2, 0.25) + P_shift + PAL_T * 0.04)); }
+vec3 pal(float x) { return vec3(0.5, 0.3, 0.2) + vec3(0.5, 0.35, 0.25) * cos(6.28318 * (vec3(1.0, 1.0, 1.0) * x * P_spread + vec3(0.0, 0.1, 0.2) + P_shift + PAL_T * 0.04)); }
 
 vec3 warp0(vec3 p, float t) {
-  p = abs(mod(p + 1.5 * P_w0_cell, 2.0 * P_w0_cell) - P_w0_cell) - 0.5 * P_w0_cell;
+  p *= 1.0 + P_w0_amount * sin(t * 2.0 - length(p) * P_w0_size);
   return p;
 }
 
 vec3 warp1(vec3 p, float t) {
-  p.xy = rot(t * P_w1_speed) * p.xy;
+  p += P_w1_amount * sin(p.yzx * P_w1_size + t);
   return p;
 }
 
 vec3 warp2(vec3 p, float t) {
-  p += P_w2_amount * sin(p.yzx * P_w2_size + t);
-  return p;
-}
-
-vec3 warp3(vec3 p, float t) {
-  p *= 1.0 + P_w3_amount * sin(t * 2.0 - length(p) * P_w3_size);
+  vec3 q = p * P_w2_scale + t * 0.3; p += P_w2_amount * (vec3(noise(q), noise(q + 17.1), noise(q - 9.3)) - 0.5);
   return p;
 }
 
@@ -75,21 +71,23 @@ float formA(vec3 p) {
   return p.y + P_a_height * sin(p.x * P_a_size + sin(p.z * P_a_size * 0.7)) * cos(p.z * P_a_size * 0.5);
 }
 
+float formB(vec3 p) {
+  vec2 g = p.xy * P_b_scale; vec2 i = floor(g); vec2 f = fract(g); float a = 8.0; float b = 8.0; for (int y = -1; y <= 1; y++) { for (int x = -1; x <= 1; x++) { vec2 o = vec2(float(x), float(y)); vec2 c = o + vec2(hash(i + o), hash(i + o + 19.7)); float e = length(c - f); if (e < a) { b = a; a = e; } else if (e < b) { b = e; } } } return (P_b_edge - (b - a)) / P_b_scale;
+}
+
 float field(vec3 p, float t) {
   vec3 q = p;
   p = warp0(p, t);
   p = warp1(p, t);
   p = warp2(p, t);
-  p = warp3(p, t);
   float a = formA(p);
+  float b = formB(p);
+  a = max(a, b);
   return a;
 }
 
 vec3 look(vec2 uv, float t) {
-  float n = 6.28318 / floor(P_s_slices);
-  float a = abs(mod(atan(uv.y, uv.x), n) - 0.5 * n);
-  vec2 q = vec2(cos(a), sin(a)) * length(uv);
-  vec3 p = vec3(q * P_s_zoom, 0.0);
+  vec3 p = vec3(uv * P_s_zoom, 0.0);
   float d = field(p, t);
   float v = (d + t * 0.1);
   vec3 col = pal(v) * smoothstep(0.012 * P_s_zoom, -0.012 * P_s_zoom, d);
