@@ -1,12 +1,12 @@
 <!doctype html>
-<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Ghost Line Glide</title><style>body{margin:0;background:#141210;color:#e8e2d6;font-family:monospace;line-height:1.5}main{max-width:680px;margin:32px auto;padding:0 16px}canvas{display:block;margin:0 auto 20px;max-width:100%;background:#000}pre{background:#1e1a17;padding:12px;overflow:auto;border-radius:6px;font-size:12.5px}a{color:#e8b86d}h1{font-weight:normal;font-size:20px}p.meta{color:#9a9186;font-size:13px}canvas,img.still{width:512px;aspect-ratio:1;cursor:crosshair}.dials{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:6px 16px;margin:0 0 20px;font-size:12px;color:#9a9186}.dials label{display:flex;flex-direction:column}.dials input{width:100%;accent-color:#e8b86d}img.still{display:none;margin:0 auto 20px;max-width:100%}</style></head>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Ghost Line Whisper  Part1</title><style>body{margin:0;background:#141210;color:#e8e2d6;font-family:monospace;line-height:1.5}main{max-width:680px;margin:32px auto;padding:0 16px}canvas{display:block;margin:0 auto 20px;max-width:100%;background:#000}pre{background:#1e1a17;padding:12px;overflow:auto;border-radius:6px;font-size:12.5px}a{color:#e8b86d}h1{font-weight:normal;font-size:20px}p.meta{color:#9a9186;font-size:13px}canvas,img.still{width:512px;aspect-ratio:1;cursor:crosshair}.dials{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:6px 16px;margin:0 0 20px;font-size:12px;color:#9a9186}.dials label{display:flex;flex-direction:column}.dials input{width:100%;accent-color:#e8b86d}img.still{display:none;margin:0 auto 20px;max-width:100%}</style></head>
 <body><main>
-<h1>Ghost Line Glide</h1>
-<canvas id="c" width="512" height="512"></canvas><img class="still" id="still" src="./p0100.png" alt="a frame of Ghost Line Glide">
-<p>I trimmed the whole chaotic mess down to a single vivid line that ripples and twists like a neon phantom, looping perfectly without a seam.</p>
-<p class="meta">a shader by pino, 2026. GLSL, running live on your graphics card. <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>. the shader is <a href="./p0100.frag">here</a>. <a href="./">more of these</a></p>
-<p class="meta">made from the shader engine's parts: a kaleidoscope; repeated, then rippled by sine waves, then twisted along its length; of cells, with shells both there; in embers colours. turn the dials to play with it. the parts are <a href="./p0100.patch.json">here</a>.</p>
-<div class="dials"><label>repeat: how far apart the copies<input type="range" data-u="P_w0_cell" min="0.5" max="6" step="0.0275" value="3.492"></label><label>ripple: how far<input type="range" data-u="P_w1_amount" min="0" max="1" step="0.005" value="0.3"></label><label>ripple: how close together<input type="range" data-u="P_w1_size" min="0.5" max="6" step="0.0275" value="2.142"></label><label>twist: how hard, and which way<input type="range" data-u="P_w2_amount" min="-3" max="3" step="0.03" value="0.8"></label><label>cells: how big the cells<input type="range" data-u="P_a_scale" min="0.5" max="8" step="0.0375" value="2.663"></label><label>cells: how wide the cracks<input type="range" data-u="P_a_edge" min="0.02" max="0.4" step="0.0019" value="0.08"></label><label>shells: how far apart<input type="range" data-u="P_b_spacing" min="0.1" max="1.5" step="0.007" value="0.484"></label><label>shells: how thick<input type="range" data-u="P_b_thickness" min="0.01" max="0.4" step="0.002" value="0.06"></label><label>kaleidoscope: how many slices<input type="range" data-u="P_s_slices" min="3" max="16" step="0.065" value="7.159"></label><label>kaleidoscope: how far out you are<input type="range" data-u="P_s_zoom" min="0.5" max="6" step="0.0275" value="1.978"></label><label>colour: where in the palette it starts<input type="range" data-u="P_shift" min="0" max="1" step="0.005" value="0.116"></label><label>colour: how much of the palette it uses<input type="range" data-u="P_spread" min="0.2" max="3" step="0.014" value="0.86"></label><label>colour: how much it glows<input type="range" data-u="P_glow" min="0" max="2" step="0.01" value="0.6"></label><label>finish: how bright<input type="range" data-u="P_exposure" min="0.4" max="2.5" step="0.0105" value="1"></label><label>finish: how much film grain<input type="range" data-u="P_grain" min="0" max="0.08" step="0.0004" value="0.027"></label><label>finish: how dark the corners<input type="range" data-u="P_vignette" min="0" max="1" step="0.005" value="0.25"></label><label>speed: how fast it all moves<input type="range" data-u="P_speed" min="0.1" max="2" step="0.0095" value="0.447"></label></div>
+<h1>Ghost Line Whisper  Part1</h1>
+<canvas id="c" width="512" height="512"></canvas><img class="still" id="still" src="./p0100.png" alt="a frame of Ghost Line Whisper  Part1">
+<p>I stripped the kaleidoscope down to a single, trembling line that drifts like a breath through a hazy ember haze. It’s a quiet echo of motion, not a noisy pattern.</p>
+<p class="meta">version 2. a shader by pino, 2026. GLSL, running live on your graphics card. <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>. the shader is <a href="./p0100.frag">here</a>. <a href="./">more of these</a></p>
+<p class="meta">made from the shader engine's parts: the picture plane itself; repeated, then breathing, then rippled by sine waves, then drifting forward; of cells, with clouds both there; in embers colours. turn the dials to play with it. the parts are <a href="./p0100.patch.json">here</a>.</p>
+<div class="dials"><label>repeat: how far apart the copies<input type="range" data-u="P_w0_cell" min="0.5" max="6" step="0.0275" value="2.778"></label><label>breathe: how much<input type="range" data-u="P_w1_amount" min="0" max="0.6" step="0.003" value="0.165"></label><label>breathe: how much the swell travels outward<input type="range" data-u="P_w1_size" min="0" max="4" step="0.02" value="1.2"></label><label>ripple: how far<input type="range" data-u="P_w2_amount" min="0" max="1" step="0.005" value="0.25"></label><label>ripple: how close together<input type="range" data-u="P_w2_size" min="0.5" max="6" step="0.0275" value="1.17"></label><label>drift: how fast<input type="range" data-u="P_w3_speed" min="0" max="3" step="0.015" value="0.828"></label><label>cells: how big the cells<input type="range" data-u="P_a_scale" min="0.5" max="8" step="0.0375" value="2.5"></label><label>cells: how wide the cracks<input type="range" data-u="P_a_edge" min="0.02" max="0.4" step="0.0019" value="0.049"></label><label>clouds: how big the billows<input type="range" data-u="P_b_scale" min="0.3" max="6" step="0.0285" value="1.5"></label><label>clouds: how many layers of detail<input type="range" data-u="P_b_layers" min="1" max="6" step="0.025" value="4.29"></label><label>clouds: how much of it there is<input type="range" data-u="P_b_cover" min="0.2" max="0.8" step="0.003" value="0.5"></label><label>flat: how far out you are<input type="range" data-u="P_s_zoom" min="0.5" max="8" step="0.0375" value="1.72"></label><label>colour: where in the palette it starts<input type="range" data-u="P_shift" min="0" max="1" step="0.005" value="0.104"></label><label>colour: how much of the palette it uses<input type="range" data-u="P_spread" min="0.2" max="3" step="0.014" value="1.003"></label><label>colour: how much it glows<input type="range" data-u="P_glow" min="0" max="2" step="0.01" value="0.523"></label><label>finish: how bright<input type="range" data-u="P_exposure" min="0.4" max="2.5" step="0.0105" value="0.934"></label><label>finish: how much film grain<input type="range" data-u="P_grain" min="0" max="0.08" step="0.0004" value="0.027"></label><label>finish: how dark the corners<input type="range" data-u="P_vignette" min="0" max="1" step="0.005" value="0.19"></label><label>speed: how fast it all moves<input type="range" data-u="P_speed" min="0.1" max="2" step="0.0095" value="0.447"></label></div>
 </main>
 <script id="fs" type="x-shader/x-fragment">#version 300 es
 precision highp float;
@@ -20,11 +20,13 @@ uniform float P_w0_cell;
 uniform float P_w1_amount;
 uniform float P_w1_size;
 uniform float P_w2_amount;
+uniform float P_w2_size;
+uniform float P_w3_speed;
 uniform float P_a_scale;
 uniform float P_a_edge;
-uniform float P_b_spacing;
-uniform float P_b_thickness;
-uniform float P_s_slices;
+uniform float P_b_scale;
+uniform float P_b_layers;
+uniform float P_b_cover;
 uniform float P_s_zoom;
 uniform float P_shift;
 uniform float P_spread;
@@ -69,12 +71,17 @@ vec3 warp0(vec3 p, float t) {
 }
 
 vec3 warp1(vec3 p, float t) {
-  p += P_w1_amount * sin(p.yzx * P_w1_size + t);
+  p *= 1.0 + P_w1_amount * sin(t * 2.0 - length(p) * P_w1_size);
   return p;
 }
 
 vec3 warp2(vec3 p, float t) {
-  p.xy = rot(p.z * P_w2_amount) * p.xy;
+  p += P_w2_amount * sin(p.yzx * P_w2_size + t);
+  return p;
+}
+
+vec3 warp3(vec3 p, float t) {
+  p.z += t * P_w3_speed;
   return p;
 }
 
@@ -83,7 +90,7 @@ float formA(vec3 p) {
 }
 
 float formB(vec3 p) {
-  return abs(mod(length(p), P_b_spacing) - 0.5 * P_b_spacing) - P_b_thickness;
+  return (fbm(p * P_b_scale, P_b_layers) - P_b_cover) / P_b_scale;
 }
 
 float field(vec3 p, float t) {
@@ -91,6 +98,7 @@ float field(vec3 p, float t) {
   p = warp0(p, t);
   p = warp1(p, t);
   p = warp2(p, t);
+  p = warp3(p, t);
   float a = formA(p);
   float b = formB(p);
   a = min(a, b);
@@ -98,10 +106,7 @@ float field(vec3 p, float t) {
 }
 
 vec3 look(vec2 uv, float t) {
-  float n = 6.28318 / floor(P_s_slices);
-  float a = abs(mod(atan(uv.y, uv.x), n) - 0.5 * n);
-  vec2 q = vec2(cos(a), sin(a)) * length(uv);
-  vec3 p = vec3(q * P_s_zoom, 0.0);
+  vec3 p = vec3(uv * P_s_zoom, 0.0);
   float d = field(p, t);
   float v = (d * 2.0);
   vec3 col = pal(v) * smoothstep(0.012 * P_s_zoom, -0.012 * P_s_zoom, d);
