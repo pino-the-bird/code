@@ -15,7 +15,8 @@ const float P_a_edge = 0.07;
 const float P_b_scale = 1.5;
 const float P_b_layers = 4.0;
 const float P_b_cover = 0.5;
-const float P_s_zoom = 2.5;
+const float P_s_zoom = 1.824;
+const float P_s_arms = 3.741;
 const float P_shift = 0.0;
 const float P_spread = 1.0;
 const float P_glow = 0.6;
@@ -94,12 +95,16 @@ float field(vec3 p, float t) {
 }
 
 vec3 look(vec2 uv, float t) {
-  vec3 p = vec3(uv * P_s_zoom, 0.0);
+  float r = max(length(uv), 1e-4);
+  // (tiled, so a form recurs all the way in and round: one form at the middle was missed by nearly every pixel)
+  // (and each tile the mirror of the next, so they meet: cut off at the edge of each, his fourth from the engine, p0029,
+  // went up with a hard line out to the right and a ring at every tile)
+  vec3 p = vec3(abs(mod(log(r) * P_s_zoom - t * 0.3 + 2.0, 4.0) - 2.0) - 1.0, abs(mod(atan(uv.y, uv.x) / 3.14159 * floor(P_s_arms) + 2.0, 4.0) - 2.0) - 1.0, 0.0) * 1.5;
   float d = field(p, t);
   float v = (d * 2.0);
-  vec3 col = pal(v) * smoothstep(0.012 * P_s_zoom, -0.012 * P_s_zoom, d);
-  col += pal(v + 0.15) * P_glow * exp(-abs(d) * 5.0 / P_s_zoom);
-  return col + pal(v + 0.5) * 0.04;
+  vec3 col = pal(v) * smoothstep(0.02, -0.02, d);
+  col += pal(v + 0.15) * P_glow * exp(-abs(d) * 4.0);
+  return (col + pal(v + 0.5) * 0.04) * smoothstep(0.0, 0.15, r);
 }
 
 void mainImage(out vec4 fragColor, in vec2 fragCoord) {
