@@ -1,7 +1,8 @@
 {
   "space": {
-    "part": "flat",
-    "zoom": 2.5
+    "part": "polar",
+    "zoom": 1.824,
+    "arms": 3.741
   },
   "warps": [
     {
