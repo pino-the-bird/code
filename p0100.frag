@@ -1,28 +1,27 @@
-// Ghost Line Whisper  Seamless Pulse
+// Ghost Line Whisper  Seamless Ember Sweep
 // SPDX-License-Identifier: CC-BY-NC-SA-4.0
 // Copyright (c) 2026 pino (https://pino-the-bird.github.io/code/p0100.html)
 // https://creativecommons.org/licenses/by-nc-sa/4.0/
 // uniforms: vec3 iResolution, float iTime, vec4 iMouse, int iFrame
 
-const float P_w0_cell = 2.5;
-const float P_w1_amount = 0.18;
-const float P_w1_size = 1.2;
+const float P_w0_cell = 1.772;
+const float P_w1_amount = 0.187;
+const float P_w1_size = 1.417;
 const float P_w2_amount = 0.25;
 const float P_w2_size = 2.0;
-const float P_w3_speed = 0.6;
-const float P_a_scale = 2.5;
+const float P_w3_speed = 0.416;
+const float P_a_scale = 2.551;
 const float P_a_edge = 0.07;
 const float P_b_scale = 1.5;
-const float P_b_layers = 4.0;
-const float P_b_cover = 0.5;
-const float P_s_zoom = 1.824;
-const float P_s_arms = 3.741;
-const float P_shift = 0.0;
+const float P_b_layers = 3.838;
+const float P_b_cover = 0.431;
+const float P_s_zoom = 2.482;
+const float P_shift = 0.069;
 const float P_spread = 1.0;
-const float P_glow = 0.6;
+const float P_glow = 0.699;
 const float P_exposure = 0.94;
-const float P_grain = 0.02;
-const float P_vignette = 0.18;
+const float P_grain = 0.022;
+const float P_vignette = 0.073;
 const float P_speed = 0.45;
 
 float PAL_T = 0.0;
@@ -95,16 +94,12 @@ float field(vec3 p, float t) {
 }
 
 vec3 look(vec2 uv, float t) {
-  float r = max(length(uv), 1e-4);
-  // (tiled, so a form recurs all the way in and round: one form at the middle was missed by nearly every pixel)
-  // (and each tile the mirror of the next, so they meet: cut off at the edge of each, his fourth from the engine, p0029,
-  // went up with a hard line out to the right and a ring at every tile)
-  vec3 p = vec3(abs(mod(log(r) * P_s_zoom - t * 0.3 + 2.0, 4.0) - 2.0) - 1.0, abs(mod(atan(uv.y, uv.x) / 3.14159 * floor(P_s_arms) + 2.0, 4.0) - 2.0) - 1.0, 0.0) * 1.5;
+  vec3 p = vec3(uv * P_s_zoom, 0.0);
   float d = field(p, t);
   float v = (d * 2.0);
-  vec3 col = pal(v) * smoothstep(0.02, -0.02, d);
-  col += pal(v + 0.15) * P_glow * exp(-abs(d) * 4.0);
-  return (col + pal(v + 0.5) * 0.04) * smoothstep(0.0, 0.15, r);
+  vec3 col = pal(v) * smoothstep(0.012 * P_s_zoom, -0.012 * P_s_zoom, d);
+  col += pal(v + 0.15) * P_glow * exp(-abs(d) * 5.0 / P_s_zoom);
+  return col + pal(v + 0.5) * 0.04;
 }
 
 void mainImage(out vec4 fragColor, in vec2 fragCoord) {
