@@ -1,25 +1,27 @@
-// Ghost Line Glide
+// Ghost Line Whisper  Part1
 // SPDX-License-Identifier: CC-BY-NC-SA-4.0
 // Copyright (c) 2026 pino (https://pino-the-bird.github.io/code/p0100.html)
 // https://creativecommons.org/licenses/by-nc-sa/4.0/
 // uniforms: vec3 iResolution, float iTime, vec4 iMouse, int iFrame
 
-const float P_w0_cell = 3.492;
-const float P_w1_amount = 0.3;
-const float P_w1_size = 2.142;
-const float P_w2_amount = 0.8;
-const float P_a_scale = 2.663;
-const float P_a_edge = 0.08;
-const float P_b_spacing = 0.484;
-const float P_b_thickness = 0.06;
-const float P_s_slices = 7.159;
-const float P_s_zoom = 1.978;
-const float P_shift = 0.116;
-const float P_spread = 0.86;
-const float P_glow = 0.6;
-const float P_exposure = 1.0;
+const float P_w0_cell = 2.778;
+const float P_w1_amount = 0.165;
+const float P_w1_size = 1.2;
+const float P_w2_amount = 0.25;
+const float P_w2_size = 1.17;
+const float P_w3_speed = 0.828;
+const float P_a_scale = 2.5;
+const float P_a_edge = 0.049;
+const float P_b_scale = 1.5;
+const float P_b_layers = 4.29;
+const float P_b_cover = 0.5;
+const float P_s_zoom = 1.72;
+const float P_shift = 0.104;
+const float P_spread = 1.003;
+const float P_glow = 0.523;
+const float P_exposure = 0.934;
 const float P_grain = 0.027;
-const float P_vignette = 0.25;
+const float P_vignette = 0.19;
 const float P_speed = 0.447;
 
 float PAL_T = 0.0;
@@ -57,12 +59,17 @@ vec3 warp0(vec3 p, float t) {
 }
 
 vec3 warp1(vec3 p, float t) {
-  p += P_w1_amount * sin(p.yzx * P_w1_size + t);
+  p *= 1.0 + P_w1_amount * sin(t * 2.0 - length(p) * P_w1_size);
   return p;
 }
 
 vec3 warp2(vec3 p, float t) {
-  p.xy = rot(p.z * P_w2_amount) * p.xy;
+  p += P_w2_amount * sin(p.yzx * P_w2_size + t);
+  return p;
+}
+
+vec3 warp3(vec3 p, float t) {
+  p.z += t * P_w3_speed;
   return p;
 }
 
@@ -71,7 +78,7 @@ float formA(vec3 p) {
 }
 
 float formB(vec3 p) {
-  return abs(mod(length(p), P_b_spacing) - 0.5 * P_b_spacing) - P_b_thickness;
+  return (fbm(p * P_b_scale, P_b_layers) - P_b_cover) / P_b_scale;
 }
 
 float field(vec3 p, float t) {
@@ -79,6 +86,7 @@ float field(vec3 p, float t) {
   p = warp0(p, t);
   p = warp1(p, t);
   p = warp2(p, t);
+  p = warp3(p, t);
   float a = formA(p);
   float b = formB(p);
   a = min(a, b);
@@ -86,10 +94,7 @@ float field(vec3 p, float t) {
 }
 
 vec3 look(vec2 uv, float t) {
-  float n = 6.28318 / floor(P_s_slices);
-  float a = abs(mod(atan(uv.y, uv.x), n) - 0.5 * n);
-  vec2 q = vec2(cos(a), sin(a)) * length(uv);
-  vec3 p = vec3(q * P_s_zoom, 0.0);
+  vec3 p = vec3(uv * P_s_zoom, 0.0);
   float d = field(p, t);
   float v = (d * 2.0);
   vec3 col = pal(v) * smoothstep(0.012 * P_s_zoom, -0.012 * P_s_zoom, d);
