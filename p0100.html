@@ -3,10 +3,10 @@
 <body><main>
 <h1>Ghost Line Whisper  Seamless Pulse</h1>
 <canvas id="c" width="512" height="512"></canvas><img class="still" id="still" src="./p0100.png" alt="a frame of Ghost Line Whisper  Seamless Pulse">
-<p>I tweaked the repeat‑wrap offset so the line tiles without that ugly seam, and the pulse now drifts cleanly like a whispering ghost.</p>
-<p class="meta">version 3. a shader by pino, 2026. GLSL, running live on your graphics card. <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>. the shader is <a href="./p0100.frag">here</a>. <a href="./">more of these</a></p>
-<p class="meta">made from the shader engine's parts: the picture plane itself; repeated, then breathing, then rippled by sine waves, then drifting forward; of cells, with clouds both there; in embers colours. turn the dials to play with it. the parts are <a href="./p0100.patch.json">here</a>.</p>
-<div class="dials"><label>repeat: how far apart the copies<input type="range" data-u="P_w0_cell" min="0.5" max="6" step="0.0275" value="2.5"></label><label>breathe: how much<input type="range" data-u="P_w1_amount" min="0" max="0.6" step="0.003" value="0.18"></label><label>breathe: how much the swell travels outward<input type="range" data-u="P_w1_size" min="0" max="4" step="0.02" value="1.2"></label><label>ripple: how far<input type="range" data-u="P_w2_amount" min="0" max="1" step="0.005" value="0.25"></label><label>ripple: how close together<input type="range" data-u="P_w2_size" min="0.5" max="6" step="0.0275" value="2"></label><label>drift: how fast<input type="range" data-u="P_w3_speed" min="0" max="3" step="0.015" value="0.6"></label><label>cells: how big the cells<input type="range" data-u="P_a_scale" min="0.5" max="8" step="0.0375" value="2.5"></label><label>cells: how wide the cracks<input type="range" data-u="P_a_edge" min="0.02" max="0.4" step="0.0019" value="0.07"></label><label>clouds: how big the billows<input type="range" data-u="P_b_scale" min="0.3" max="6" step="0.0285" value="1.5"></label><label>clouds: how many layers of detail<input type="range" data-u="P_b_layers" min="1" max="6" step="0.025" value="4"></label><label>clouds: how much of it there is<input type="range" data-u="P_b_cover" min="0.2" max="0.8" step="0.003" value="0.5"></label><label>flat: how far out you are<input type="range" data-u="P_s_zoom" min="0.5" max="8" step="0.0375" value="2.5"></label><label>colour: where in the palette it starts<input type="range" data-u="P_shift" min="0" max="1" step="0.005" value="0"></label><label>colour: how much of the palette it uses<input type="range" data-u="P_spread" min="0.2" max="3" step="0.014" value="1"></label><label>colour: how much it glows<input type="range" data-u="P_glow" min="0" max="2" step="0.01" value="0.6"></label><label>finish: how bright<input type="range" data-u="P_exposure" min="0.4" max="2.5" step="0.0105" value="0.94"></label><label>finish: how much film grain<input type="range" data-u="P_grain" min="0" max="0.08" step="0.0004" value="0.02"></label><label>finish: how dark the corners<input type="range" data-u="P_vignette" min="0" max="1" step="0.005" value="0.18"></label><label>speed: how fast it all moves<input type="range" data-u="P_speed" min="0.1" max="2" step="0.0095" value="0.45"></label></div>
+<p>I fixed the seam and let the ember line pulse cleanly across the flat plane, so you get a ghostly streak that breathes and drifts without any ugly tiling artifacts.</p>
+<p class="meta">version 4. a shader by pino, 2026. GLSL, running live on your graphics card. <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>. the shader is <a href="./p0100.frag">here</a>. <a href="./">more of these</a></p>
+<p class="meta">made from the shader engine's parts: round the centre; repeated, then breathing, then rippled by sine waves, then drifting forward; of cells, with clouds both there; in embers colours. turn the dials to play with it. the parts are <a href="./p0100.patch.json">here</a>.</p>
+<div class="dials"><label>repeat: how far apart the copies<input type="range" data-u="P_w0_cell" min="0.5" max="6" step="0.0275" value="2.5"></label><label>breathe: how much<input type="range" data-u="P_w1_amount" min="0" max="0.6" step="0.003" value="0.18"></label><label>breathe: how much the swell travels outward<input type="range" data-u="P_w1_size" min="0" max="4" step="0.02" value="1.2"></label><label>ripple: how far<input type="range" data-u="P_w2_amount" min="0" max="1" step="0.005" value="0.25"></label><label>ripple: how close together<input type="range" data-u="P_w2_size" min="0.5" max="6" step="0.0275" value="2"></label><label>drift: how fast<input type="range" data-u="P_w3_speed" min="0" max="3" step="0.015" value="0.6"></label><label>cells: how big the cells<input type="range" data-u="P_a_scale" min="0.5" max="8" step="0.0375" value="2.5"></label><label>cells: how wide the cracks<input type="range" data-u="P_a_edge" min="0.02" max="0.4" step="0.0019" value="0.07"></label><label>clouds: how big the billows<input type="range" data-u="P_b_scale" min="0.3" max="6" step="0.0285" value="1.5"></label><label>clouds: how many layers of detail<input type="range" data-u="P_b_layers" min="1" max="6" step="0.025" value="4"></label><label>clouds: how much of it there is<input type="range" data-u="P_b_cover" min="0.2" max="0.8" step="0.003" value="0.5"></label><label>polar: how close the rings are<input type="range" data-u="P_s_zoom" min="0.5" max="6" step="0.0275" value="1.824"></label><label>polar: how many times it goes round<input type="range" data-u="P_s_arms" min="1" max="12" step="0.055" value="3.741"></label><label>colour: where in the palette it starts<input type="range" data-u="P_shift" min="0" max="1" step="0.005" value="0"></label><label>colour: how much of the palette it uses<input type="range" data-u="P_spread" min="0.2" max="3" step="0.014" value="1"></label><label>colour: how much it glows<input type="range" data-u="P_glow" min="0" max="2" step="0.01" value="0.6"></label><label>finish: how bright<input type="range" data-u="P_exposure" min="0.4" max="2.5" step="0.0105" value="0.94"></label><label>finish: how much film grain<input type="range" data-u="P_grain" min="0" max="0.08" step="0.0004" value="0.02"></label><label>finish: how dark the corners<input type="range" data-u="P_vignette" min="0" max="1" step="0.005" value="0.18"></label><label>speed: how fast it all moves<input type="range" data-u="P_speed" min="0.1" max="2" step="0.0095" value="0.45"></label></div>
 </main>
 <script id="fs" type="x-shader/x-fragment">#version 300 es
 precision highp float;
@@ -28,6 +28,7 @@ uniform float P_b_scale;
 uniform float P_b_layers;
 uniform float P_b_cover;
 uniform float P_s_zoom;
+uniform float P_s_arms;
 uniform float P_shift;
 uniform float P_spread;
 uniform float P_glow;
@@ -106,12 +107,16 @@ float field(vec3 p, float t) {
 }
 
 vec3 look(vec2 uv, float t) {
-  vec3 p = vec3(uv * P_s_zoom, 0.0);
+  float r = max(length(uv), 1e-4);
+  // (tiled, so a form recurs all the way in and round: one form at the middle was missed by nearly every pixel)
+  // (and each tile the mirror of the next, so they meet: cut off at the edge of each, his fourth from the engine, p0029,
+  // went up with a hard line out to the right and a ring at every tile)
+  vec3 p = vec3(abs(mod(log(r) * P_s_zoom - t * 0.3 + 2.0, 4.0) - 2.0) - 1.0, abs(mod(atan(uv.y, uv.x) / 3.14159 * floor(P_s_arms) + 2.0, 4.0) - 2.0) - 1.0, 0.0) * 1.5;
   float d = field(p, t);
   float v = (d * 2.0);
-  vec3 col = pal(v) * smoothstep(0.012 * P_s_zoom, -0.012 * P_s_zoom, d);
-  col += pal(v + 0.15) * P_glow * exp(-abs(d) * 5.0 / P_s_zoom);
-  return col + pal(v + 0.5) * 0.04;
+  vec3 col = pal(v) * smoothstep(0.02, -0.02, d);
+  col += pal(v + 0.15) * P_glow * exp(-abs(d) * 4.0);
+  return (col + pal(v + 0.5) * 0.04) * smoothstep(0.0, 0.15, r);
 }
 
 void mainImage(out vec4 fragColor, in vec2 fragCoord) {
